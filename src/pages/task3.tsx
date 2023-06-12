@@ -16,37 +16,58 @@ import {
   ApartmentsForRent,
 } from "@/db/schema/apartmentsForRent";
 import { db } from "@/db/drizzle";
+import React, { PureComponent } from "react";
+import {
+  BarChart,
+  Bar,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  ComposedChart,
+  Area,
+  Line,
+} from "recharts";
 
+type LocationCount = {
+  location: string;
+  count: number;
+};
 type Repo = {
-  //   top10PartsOfBelgrade: string[];
+  top10PartsOfBelgrade: LocationCount[];
 };
 
 export const getServerSideProps: GetServerSideProps<Repo> = async () => {
-  //   const [top10PartsOfBelgrade] = await Promise.all([
-  //     db.execute<HousesForRent>(sql`Select location, count(*) as count
-  //         from (
-  //             select * from houses_for_sale
-  //             union
-  //             select * from houses_for_rent
-  //             union
-  //             select * from apartments_for_rent
-  //             union
-  //             select * from apartments_for_sale
-  //         ) as properties
-  //         where city = 'beograd'and location != 'beograd'
-  //         group by location
-  //         order by count desc
-  //         limit 10
-  //   `),
-  //   ]);
+  const [top10PartsOfBelgrade] = await Promise.all([
+    db.execute<LocationCount>(sql`Select location, count(*) as count
+          from (
+              select * from houses_for_sale
+              union
+              select * from houses_for_rent
+              union
+              select * from apartments_for_rent
+              union
+              select * from apartments_for_sale
+          ) as properties
+          where city = 'beograd'and location != 'beograd'
+          group by location
+          order by count desc
+          limit 10
+    `),
+  ]);
   return {
     props: {
-      //   top10PartsOfBelgrade,
+      top10PartsOfBelgrade,
       //   numOfPropertiesForRent,
     },
   };
 };
-export default function Task3({}: //   top10PartsOfBelgrade,
+export default function Task3({
+  top10PartsOfBelgrade,
+}: //   top10PartsOfBelgrade,
 InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <main
@@ -54,7 +75,41 @@ InferGetServerSidePropsType<typeof getServerSideProps>) {
     >
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
         Hello
-        {/* {top10PartsOfBelgrade[0]} */}
+        {top10PartsOfBelgrade[0].location}
+        {/* <BarChart
+          width={500}
+          height={300}
+          data={top10PartsOfBelgrade}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="location" hide />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="count" barSize={20} fill="#8884d8" />
+        </BarChart> */}
+        {/* //// */}
+        <ComposedChart
+          layout="vertical"
+          width={500}
+          height={600}
+          data={top10PartsOfBelgrade}
+          margin={{
+            top: 20,
+            right: 20,
+            bottom: 20,
+            left: 40,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis type="number" />
+          <YAxis dataKey="location" type="category" />
+          <Tooltip />
+          <Legend />
+          {/* <Area dataKey="amt" fill="#8884d8" stroke="#8884d8" /> */}
+          <Bar dataKey="count" barSize={20} fill="#8884d8" />
+          {/* <Line dataKey="uv" stroke="#ff7300" /> */}
+        </ComposedChart>
       </div>
     </main>
   );
