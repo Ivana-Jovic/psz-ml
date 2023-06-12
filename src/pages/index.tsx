@@ -15,6 +15,7 @@ import {
   apartmentsForRent,
   ApartmentsForRent,
 } from "@/db/schema/apartmentsForRent";
+import Link from "next/link";
 
 type Count = {
   count: number;
@@ -352,6 +353,9 @@ InferGetServerSidePropsType<typeof getServerSideProps>) {
         {/* {numOfPropertiesForRent}
         <br />
         {numOfPropertiesForSale} */}
+        <Link href={"/task3"} className="btn">
+          Go to task3
+        </Link>
       </div>
     </main>
   );
