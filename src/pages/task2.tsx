@@ -15,6 +15,9 @@ import {
   ApartmentsForRent,
 } from "@/db/schema/apartmentsForRent";
 import Link from "next/link";
+import Card from "@/components/card";
+import TableApartments from "@/components/tableApartments";
+import TableHouses from "@/components/tableHouses";
 
 type Count = {
   count: number;
@@ -27,20 +30,20 @@ type Repo = {
   // data: Pick<HousesForRent, "title">[];
   numOfPropertiesForRent: number;
   numOfPropertiesForSale: number;
-  numOfHousesForRent: Count[]; // 2.a) - 4 queries
-  numOfHousesForSale: Count[];
-  numOfApartmentsForRent: Count[];
-  numOfApartmentsForSale: Count[];
+  numOfHousesForRent: number; // 2.a) - 4 queries
+  numOfHousesForSale: number;
+  numOfApartmentsForRent: number;
+  numOfApartmentsForSale: number;
   numOfHousesForSaleCity: CountCity[]; // 2.b) - 2
   numOfApartmentsForSaleCity: CountCity[];
-  numOfHousesForRentRegistered: Count[]; // 2.c) - 8
-  numOfHousesForSaleRegistered: Count[];
-  numOfHousesForRentUnRegistered: Count[];
-  numOfHousesForSaleUnRegistered: Count[];
-  numOfApartmentsForRentRegistered: Count[];
-  numOfApartmentsForSaleRegistered: Count[];
-  numOfApartmentsForRentUnRegistered: Count[];
-  numOfApartmentsForSaleUnRegistered: Count[];
+  numOfHousesForRentRegistered: number; // 2.c) - 8
+  numOfHousesForSaleRegistered: number;
+  numOfHousesForRentUnRegistered: number;
+  numOfHousesForSaleUnRegistered: number;
+  numOfApartmentsForRentRegistered: number;
+  numOfApartmentsForSaleRegistered: number;
+  numOfApartmentsForRentUnRegistered: number;
+  numOfApartmentsForSaleUnRegistered: number;
   top30PriceHousesForSale: HousesForSale[]; // 2.d) - 2
   top30PriceApartmentsForSale: ApartmentsForSale[];
   top100SizeHouses: HousesForRent[]; // 2.e) - 2
@@ -309,20 +312,24 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
     props: {
       numOfPropertiesForRent,
       numOfPropertiesForSale,
-      numOfHousesForRent, // 2.a) - 4 queries
-      numOfHousesForSale,
-      numOfApartmentsForRent,
-      numOfApartmentsForSale,
-      numOfHousesForSaleCity, // 2.b) - 2
-      numOfApartmentsForSaleCity,
-      numOfHousesForRentRegistered, // 2.c) - 8
-      numOfHousesForSaleRegistered,
-      numOfHousesForRentUnRegistered,
-      numOfHousesForSaleUnRegistered,
-      numOfApartmentsForRentRegistered,
-      numOfApartmentsForSaleRegistered,
-      numOfApartmentsForRentUnRegistered,
-      numOfApartmentsForSaleUnRegistered,
+      numOfHousesForRent: +numOfHousesForRent[0].count, // 2.a) - 4 queries
+      numOfHousesForSale: +numOfHousesForSale[0].count,
+      numOfApartmentsForRent: +numOfApartmentsForRent[0].count,
+      numOfApartmentsForSale: +numOfApartmentsForSale[0].count,
+      numOfHousesForSaleCity: numOfHousesForSaleCity, // 2.b) - 2
+      numOfApartmentsForSaleCity: numOfApartmentsForSaleCity,
+      numOfHousesForRentRegistered: +numOfHousesForRentRegistered[0].count, // 2.c) - 8
+      numOfHousesForSaleRegistered: +numOfHousesForSaleRegistered[0].count,
+      numOfHousesForRentUnRegistered: +numOfHousesForRentUnRegistered[0].count,
+      numOfHousesForSaleUnRegistered: +numOfHousesForSaleUnRegistered[0].count,
+      numOfApartmentsForRentRegistered:
+        +numOfApartmentsForRentRegistered[0].count,
+      numOfApartmentsForSaleRegistered:
+        +numOfApartmentsForSaleRegistered[0].count,
+      numOfApartmentsForRentUnRegistered:
+        +numOfApartmentsForRentUnRegistered[0].count,
+      numOfApartmentsForSaleUnRegistered:
+        +numOfApartmentsForSaleUnRegistered[0].count,
       top30PriceHousesForSale, // 2.d) - 2
       top30PriceApartmentsForSale,
       top100SizeHouses: top100SizeHouses.rows, // 2.e) - 2
@@ -339,9 +346,37 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
   };
   // const inter = Inter({ subsets: ["latin"] });
 };
-export default function Task2({}: // data,
-// numOfPropertiesForRent,
-// numOfPropertiesForSale,
+export default function Task2({
+  numOfPropertiesForRent,
+  numOfPropertiesForSale,
+  numOfHousesForRent, // 2.a) - 4 queries
+  numOfHousesForSale,
+  numOfApartmentsForRent,
+  numOfApartmentsForSale,
+  numOfHousesForSaleCity, // 2.b) - 2
+  numOfApartmentsForSaleCity,
+  numOfHousesForRentRegistered, // 2.c) - 8
+  numOfHousesForSaleRegistered,
+  numOfHousesForRentUnRegistered,
+  numOfHousesForSaleUnRegistered,
+  numOfApartmentsForRentRegistered,
+  numOfApartmentsForSaleRegistered,
+  numOfApartmentsForRentUnRegistered,
+  numOfApartmentsForSaleUnRegistered,
+  top30PriceHousesForSale, // 2.d) - 2
+  top30PriceApartmentsForSale,
+  top100SizeHouses, // 2.e) - 2
+  top100SizeApartments,
+  constructionYearHousesRent, // 2)f - 4
+  constructionYearHousesSale,
+  constructionYearApartmentsRent,
+  constructionYearApartmentsSale,
+  top30NumOfRoomsHouses, // 2)g1 - 2
+  top30NumOfRoomsApartments,
+  top30SizeApartments, // 2)g2 - 1
+  top30LandSizeHouses, // 2)g3 - 1},
+}: // data,
+
 InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
@@ -350,6 +385,147 @@ InferGetServerSidePropsType<typeof getServerSideProps>) {
         {/* {numOfPropertiesForRent}
         <br />
         {numOfPropertiesForSale} */}
+        <div className="flex flex-col items-center gap-10 mt-10 px-10 mx-20">
+          {/* // -------------------------- 2.a) -------------------------- */}
+          <Card
+            title="Task 2a)"
+            data={
+              <>
+                <div> numOfPropertiesForRent: {numOfPropertiesForRent}</div>
+                <div> numOfPropertiesForSale: {numOfPropertiesForSale}</div>
+              </>
+            }
+          />
+
+          {/* // -------------------------- 2.b) -------------------------- */}
+          <Card
+            title="Task 2b)"
+            data={
+              <>
+                <div className=" overflow-y-auto max-w-xs max-h-96">
+                  <table className="table table-xs table-zebra table-pin-rows table-pin-cols">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <td>City</td>
+                        <td>Count</td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {numOfHousesForSaleCity.map((row, i) => (
+                        <>
+                          <tr>
+                            <th>{i}</th>
+                            <td>{row.city}</td>
+                            <td>{row.count}</td>
+                          </tr>
+                        </>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            }
+          />
+          {/* // -------------------------- 2.c) -------------------------- */}
+          <Card
+            title="Task 2c)"
+            data={
+              <>
+                <div className="text-2xl"> Houses:</div>
+                <div>
+                  registered:
+                  {numOfHousesForRentRegistered + numOfHousesForSaleRegistered}
+                </div>
+                <div>
+                  unregistered:
+                  {numOfHousesForRentUnRegistered +
+                    numOfHousesForSaleUnRegistered}
+                </div>
+                <div>
+                  undefined registered:
+                  {numOfHousesForRent +
+                    numOfHousesForSale -
+                    numOfHousesForRentUnRegistered -
+                    numOfHousesForSaleUnRegistered}
+                </div>
+                <div className="text-2xl">Apartments:</div>
+                <div>
+                  registered:
+                  {numOfApartmentsForRentRegistered +
+                    numOfApartmentsForSaleRegistered}
+                </div>
+                <div>
+                  unregistered:
+                  {numOfApartmentsForRentUnRegistered +
+                    numOfApartmentsForSaleUnRegistered}
+                </div>
+                <div>
+                  undefined registered:
+                  {numOfApartmentsForRent +
+                    numOfApartmentsForSale -
+                    numOfApartmentsForRentRegistered -
+                    numOfApartmentsForSaleRegistered}
+                </div>
+              </>
+            }
+          />
+          {/* // -------------------------- 2.d) -------------------------- */}
+          <Card
+            title="Task 2d) houses"
+            data={<TableHouses data={top30PriceHousesForSale} />}
+          />
+          <Card
+            title="Task 2d) apartments"
+            data={<TableApartments data={top30PriceApartmentsForSale} />}
+          />
+
+          {/* // -------------------------- 2.e) -------------------------- */}
+          <Card
+            title="Task 2e) houses"
+            data={<TableHouses data={top100SizeHouses} />}
+          />
+          <Card
+            title="Task 2e) apartments"
+            data={<TableApartments data={top100SizeApartments} />}
+          />
+
+          {/* // -------------------------- 2.f) -------------------------- */}
+          <Card
+            title="Task 2f) houses rent"
+            data={<TableHouses data={constructionYearHousesRent} />}
+          />
+          <Card
+            title="Task 2f) houses sale"
+            data={<TableHouses data={constructionYearHousesSale} />}
+          />
+          <Card
+            title="Task 2f) apartments rent"
+            data={<TableApartments data={constructionYearApartmentsRent} />}
+          />
+          <Card
+            title="Task 2f) apartments sale"
+            data={<TableApartments data={constructionYearApartmentsSale} />}
+          />
+
+          {/* // -------------------------- 2.g) -------------------------- */}
+          <Card
+            title="Task 2g)1 houses"
+            data={<TableHouses data={top30NumOfRoomsHouses} />}
+          />
+          <Card
+            title="Task 2g)1 apartments"
+            data={<TableApartments data={top30NumOfRoomsApartments} />}
+          />
+          <Card
+            title="Task 2g)2 apartments"
+            data={<TableApartments data={top30SizeApartments} />}
+          />
+          <Card
+            title="Task 2g)3 houses"
+            data={<TableHouses data={top30LandSizeHouses} />}
+          />
+        </div>
       </div>
     </main>
   );
