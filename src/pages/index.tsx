@@ -20,7 +20,6 @@ import Link from "next/link";
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
-      {/* <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex"> */}
       <div className="px-10 flex flex-col gap-20 justify-center items-center min-h-screen">
         <Link href={"/task2"} className="btn">
           Go to task2
@@ -29,7 +28,6 @@ export default function Home() {
           Go to task3
         </Link>
       </div>
-      {/* </div> */}
     </main>
   );
 }

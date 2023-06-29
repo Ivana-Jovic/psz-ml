@@ -10,7 +10,6 @@ function PieChartTask3E({ data }: { data: RangeCount[] }) {
 
   return (
     <div className="flex flex-col items-center">
-      {/* <div className="text-3xl">{data[0].location}</div> */}
       <PieChart height={250} width={600}>
         <Pie
           data={data}
@@ -45,15 +44,6 @@ function PieChartTask3E({ data }: { data: RangeCount[] }) {
                 textAnchor={x > cx ? "start" : "end"}
                 dominantBaseline="central"
               >
-                {/* {data[index].isRent ? "Rent" : "Sale"}&nbsp;{value}&nbsp;( */}
-                {/* {(
-                  (data[0].count * 100) /
-                  (data[0].count + data[1].count)
-                ).toFixed(2)} */}
-                {/* %) */}
-                {/* {data[index].count}
-                {data[index].range}
-                {value} */}
                 {data[index].range} ({value}) (
                 {((value * 100) / total).toFixed(2)}
                 %)

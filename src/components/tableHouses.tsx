@@ -1,7 +1,15 @@
+import { Houses } from "@/pages/task2";
 import React from "react";
-import { HousesForSale } from "@/db/schema/housesForSale";
+import { HousesForSale, housesForSale } from "@/db/schema/housesForSale";
 
-function TableHouses({ data }: { data: HousesForSale[] }) {
+function isHouses(obj: any): obj is Houses {
+  return true;
+}
+function isHousesForSale(obj: any): obj is HousesForSale {
+  return true;
+}
+
+function TableHouses({ data }: { data: Houses[] | HousesForSale[] }) {
   return (
     <div className="overflow-y-auto max-w-3xl max-h-96">
       <table className="table table-xs table-zebra table-pin-rows table-pin-cols">
@@ -47,17 +55,32 @@ function TableHouses({ data }: { data: HousesForSale[] }) {
                 <td>{row.size}</td>
                 <td>{row.location}</td>
                 <td>{row.city}</td>
-                <td>{row.yearOfConstruction}</td>
+                <td>
+                  {isHouses(row) && row.year_of_construction}
+                  {isHousesForSale(row) && row.yearOfConstruction}
+                </td>
                 {/* <td>{row.floor}</td> */}
-                <td>{row.totalFloors}</td>
-                <td>{row.numOfBathrooms}</td>
-                <td>{row.numOfRooms}</td>
-                <td>{row.registered}</td>
-                <td>{row.elevator}</td>
-                <td>{row.terrace}</td>
-                <td>{row.parking}</td>
-                <td>{row.garage}</td>
-                <td>{row.landSurface}</td>
+                <td>
+                  {isHouses(row) && row.total_floors}
+                  {isHousesForSale(row) && row.totalFloors}
+                </td>
+                <td>
+                  {isHouses(row) && row.num_of_bathrooms}
+                  {isHousesForSale(row) && row.numOfBathrooms}
+                </td>
+                <td>
+                  {isHouses(row) && row.num_of_rooms}
+                  {isHousesForSale(row) && row.numOfRooms}
+                </td>
+                <td>{row.registered ? "yes" : "no"}</td>
+                <td>{row.elevator ? "yes" : "no"}</td>
+                <td>{row.terrace ? "yes" : "no"}</td>
+                <td>{row.parking ? "yes" : "no"}</td>
+                <td>{row.garage ? "yes" : "no"}</td>
+                <td>
+                  {isHouses(row) && row.land_surface}
+                  {isHousesForSale(row) && row.landSurface}
+                </td>
                 {/* <td>{row.validOffer}</td> */}
               </tr>
             </>

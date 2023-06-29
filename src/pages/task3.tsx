@@ -13,10 +13,12 @@ import {
   Legend,
   ComposedChart,
 } from "recharts";
-import RePieChart from "@/components/pieChart";
+import PieChartTask3D from "@/components/pieChartTask3D";
 import PieChartTask3E from "@/components/pieChartTask3E";
 import PieChartTask3F from "@/components/pieChartTask3F";
+import Link from "next/link";
 
+// TODO: napraviti kartice
 type LocationCount = {
   location: string;
   count: number;
@@ -43,10 +45,12 @@ export type LocationRentSaleCount = {
   isRent: boolean;
   count: number;
 };
+
 export type GarageCount = {
   count_parking: number;
   total_count: number;
 };
+
 type Repo = {
   top10PartsOfBelgradeProperties: LocationCount[];
   sizeRangeApartmentsForSale: SizeRangeCount[];
@@ -55,7 +59,9 @@ type Repo = {
   priceRangePropertiesForSale: RangeCount[];
   garageCountPropertiesforSale: GarageCount[];
 };
+
 // todo u task2 treba proveratvati za upite is not null
+// todo mozda spoj pie ch
 export const getServerSideProps: GetServerSideProps<Repo> = async () => {
   const [
     top10PartsOfBelgradeProperties,
@@ -65,7 +71,7 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
     priceRangePropertiesForSale,
     garageCountPropertiesforSale,
   ] = await Promise.all([
-    db.execute<LocationCount>(sql`Select location, count(*) as count
+    db.execute<LocationCount>(sql`Select location, count(*)
           from (
               select * from houses_for_sale
               union
@@ -91,7 +97,7 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
       when size <= 110 then '96-110'
       else '111+'
     end as size_range,
-    count(*) as count
+    count(*)
     from
       apartments_for_sale
     where size is not null
@@ -115,7 +121,7 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
       when year_of_construction <= 2020 then '2011-2020'
       else 'Other'
     end as range,
-    count(*) as count
+    count(*)
     from (
       select * from houses_for_sale
       union
@@ -201,7 +207,7 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
       when price <= 499999 then '150.000-199.999'
       else '500.000-'
     end as range,
-    count(*) as count
+    count(*)
     from (
       select * from houses_for_sale
       union
@@ -216,16 +222,6 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
     // -------------------------- 3.f) --------------------------
     // f)Broj nekretnina za prodaju koje imaju parking, u odnosu na ukupan broj nekretnina za
     // prodaju (samo za Beograd).
-
-    // db.execute<RangeCount>(sql`
-    // select count(*) as count
-    // from (
-    //   select * from houses_for_sale
-    //   union
-    //   select * from apartments_for_sale
-    // ) as properties_for_sale
-    // where city = 'beograd' and (garage = true or parking = true)
-    // `),
     db.execute<GarageCount>(sql`
       select 
       count(case when garage = true or parking = true then 1 end) as count_parking,
@@ -257,173 +253,133 @@ export default function Task3({
   priceRangePropertiesForSale,
   garageCountPropertiesforSale,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const taskD: LocationRentSaleCount[][] = [
-    [
+  const taskD: LocationRentSaleCount[][] = ratioSaleRentPropertiesCount.map(
+    (item) => [
       {
-        location: ratioSaleRentPropertiesCount[0].city,
-        count: +ratioSaleRentPropertiesCount[0].sale_count,
+        location: item.city,
+        count: +item.sale_count,
         isRent: false,
       },
       {
-        location: ratioSaleRentPropertiesCount[0].city,
-        count: +ratioSaleRentPropertiesCount[0].rent_count,
+        location: item.city,
+        count: +item.rent_count,
         isRent: true,
       },
-    ],
-    [
-      {
-        location: ratioSaleRentPropertiesCount[1].city,
-        count: +ratioSaleRentPropertiesCount[1].sale_count,
-        isRent: false,
-      },
-      {
-        location: ratioSaleRentPropertiesCount[1].city,
-        count: +ratioSaleRentPropertiesCount[1].rent_count,
-        isRent: true,
-      },
-    ],
-    [
-      {
-        location: ratioSaleRentPropertiesCount[2].city,
-        count: +ratioSaleRentPropertiesCount[2].sale_count,
-        isRent: false,
-      },
-      {
-        location: ratioSaleRentPropertiesCount[2].city,
-        count: +ratioSaleRentPropertiesCount[2].rent_count,
-        isRent: true,
-      },
-    ],
-    [
-      {
-        location: ratioSaleRentPropertiesCount[3].city,
-        count: +ratioSaleRentPropertiesCount[3].sale_count,
-        isRent: false,
-      },
-      {
-        location: ratioSaleRentPropertiesCount[3].city,
-        count: +ratioSaleRentPropertiesCount[3].rent_count,
-        isRent: true,
-      },
-    ],
-    [
-      {
-        location: ratioSaleRentPropertiesCount[4].city,
-        count: +ratioSaleRentPropertiesCount[4].sale_count,
-        isRent: false,
-      },
-      {
-        location: ratioSaleRentPropertiesCount[4].city,
-        count: +ratioSaleRentPropertiesCount[4].rent_count,
-        isRent: true,
-      },
-    ],
-  ];
-  const taskE: RangeCount[] = [
-    {
-      range: priceRangePropertiesForSale[0].range,
-      count: +priceRangePropertiesForSale[0].count,
-    },
-    {
-      range: priceRangePropertiesForSale[1].range,
-      count: +priceRangePropertiesForSale[1].count,
-    },
-    {
-      range: priceRangePropertiesForSale[2].range,
-      count: +priceRangePropertiesForSale[2].count,
-    },
-    {
-      range: priceRangePropertiesForSale[3].range,
-      count: +priceRangePropertiesForSale[3].count,
-    },
-    {
-      range: priceRangePropertiesForSale[4].range,
-      count: +priceRangePropertiesForSale[4].count,
-    },
-  ];
+    ]
+  );
+
+  const taskE: RangeCount[] = priceRangePropertiesForSale.map((item) => ({
+    range: item.range,
+    count: +item.count,
+  }));
+
   console.log("JII", garageCountPropertiesforSale[0].count_parking);
   return (
     <main
       className={`flex min-h-screen flex-col items-center justify-between py-24 px-5`}
     >
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        Hello
-        <div className="flex flex-col items-center">
-          {/* --------- 3.a) ---------*/}
-          <div className="text-5xl mb-10">3.a.</div>
-          <ComposedChart
-            layout="vertical"
-            width={700}
-            height={600}
-            data={top10PartsOfBelgradeProperties}
-            margin={{
-              top: 20,
-              right: 20,
-              bottom: 20,
-              left: 40,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis type="number" />
-            <YAxis dataKey="location" type="category" />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="count" barSize={20} fill="#8884d8" />
-          </ComposedChart>
-          {/* --------- 3.b) ---------*/}
-          <div className="text-5xl mb-10">3.b.</div>
-          <BarChart width={700} height={300} data={sizeRangeApartmentsForSale}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="size_range" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="count" barSize={20} fill="#8884d8" />
-          </BarChart>
-
-          {/* --------- 3.c) --------- */}
-          <div className="text-5xl mb-10">3.c.</div>
-          <BarChart
-            width={700}
-            height={300}
-            data={yearOfConstrustionRangeProperties}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="range" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="count" barSize={20} fill="#8884d8" />
-          </BarChart>
-
-          {/* --------- 3.d) ---------*/}
-          <div className="text-3xl mb-10">3.d.</div>
-          <div className="flex flex-col gap-8">
-            {taskD.map((item, i) => (
-              <RePieChart key={i} data={item} />
-            ))}
-          </div>
-
-          {/* --------- 3.e) ---------*/}
-          <div className="text-5xl mb-10">3.e.</div>
-          <PieChartTask3E data={taskE} />
-
-          {/* --------- 3.f) ---------*/}
-          <div className="text-5xl mb-10">3.f.</div>
-          <PieChartTask3F
-            data={[
-              {
-                count: +garageCountPropertiesforSale[0].count_parking,
-                name: "with parking",
-              },
-              {
-                count: +garageCountPropertiesforSale[0].total_count,
-                name: "total",
-              },
-            ]}
-          />
+      <Link href={"/task2"} className="btn mb-10">
+        Go to task2
+      </Link>
+      {/* --------- 3.a) ---------*/}
+      <div className="flex flex-col items-center gap-10">
+        <div className="text-5xl text-center">
+          3.a. 10 najzastupljenijih delova Beograda koji imaju najveći broj
+          nekretnina u ponudi
+        </div>
+        <ComposedChart
+          layout="vertical"
+          width={700}
+          height={600}
+          data={top10PartsOfBelgradeProperties}
+          margin={{
+            top: 20,
+            right: 20,
+            bottom: 20,
+            left: 40,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis type="number" />
+          <YAxis dataKey="location" type="category" />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="count" barSize={20} fill="#8884d8" />
+        </ComposedChart>
+      </div>
+      {/* --------- 3.b) ---------*/}
+      <div className="flex flex-col  items-center gap-10">
+        <div className="text-5xl text-center">
+          3.b. Broj stanova za prodaju prema kvadraturi
+        </div>
+        <BarChart width={700} height={300} data={sizeRangeApartmentsForSale}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="size_range" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="count" barSize={20} fill="#8884d8" />
+        </BarChart>
+      </div>
+      {/* --------- 3.c) --------- */}
+      <div className="flex flex-col items-center gap-10">
+        <div className="text-5xl text-center">
+          3.c. Broj izgrađenih nekretnina po dekadama
+        </div>
+        <BarChart
+          width={700}
+          height={300}
+          data={yearOfConstrustionRangeProperties}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="range" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="count" barSize={20} fill="#8884d8" />
+        </BarChart>
+      </div>
+      {/* --------- 3.d) ---------*/}
+      <div className="flex flex-col items-center  gap-10">
+        <div className="text-5xl text-center">
+          3.d. Broj (i procentualni odnos) nekretnina koje se prodaju i
+          nekretnina koje se iznajmljuju, za prvih 5 gradova sa najvećim brojem
+          nekretnina
+        </div>
+        <div className="flex flex-col gap-8">
+          {taskD.map((item, i) => (
+            <PieChartTask3D key={i} data={item} />
+          ))}
         </div>
       </div>
+      {/* --------- 3.e) ---------*/}
+      <div className="flex flex-col items-center  gap-10">
+        <div className="text-5xl text-center">
+          3.e. Broj (i procentualni odnos) svih nekretnina za prodaju, koje po
+          ceni pripadaju jednom od opsega:
+        </div>
+        <PieChartTask3E data={taskE} />
+      </div>
+      {/* --------- 3.f) ---------*/}
+      <div className="flex flex-col  items-centergap-10">
+        <div className="text-5xl text-center ">
+          3.f. Broj nekretnina za prodaju koje imaju parking, u odnosu na ukupan
+          broj nekretnina za prodaju (samo za Beograd).
+        </div>
+        <PieChartTask3F
+          data={[
+            {
+              count: +garageCountPropertiesforSale[0].count_parking,
+              name: "with parking",
+            },
+            {
+              count: +garageCountPropertiesforSale[0].total_count,
+              name: "total",
+            },
+          ]}
+        />
+      </div>
+      {/* </div> */}
     </main>
   );
 }

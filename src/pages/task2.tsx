@@ -1,5 +1,3 @@
-import Image from "next/image";
-import { Inter } from "next/font/google";
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 import { Pool } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-serverless";
@@ -14,48 +12,82 @@ import {
   apartmentsForRent,
   ApartmentsForRent,
 } from "@/db/schema/apartmentsForRent";
-import Link from "next/link";
 import Card from "@/components/card";
 import TableApartments from "@/components/tableApartments";
 import TableHouses from "@/components/tableHouses";
+import Link from "next/link";
 
-type Count = {
-  count: number;
-};
+//TODO: provera osnovnih polja ili isOk polja za svaki upit
+
 type CountCity = {
   count: number;
   city: string | null;
 };
+
+export type Houses = {
+  id: number;
+  url: string;
+  title: string;
+  price: number;
+  size: number;
+  location: string;
+  city: string;
+  year_of_construction: number;
+  land_surface: number;
+  total_floors: number;
+  num_of_bathrooms: number;
+  num_of_rooms: number;
+  registered: boolean;
+  elevator: boolean;
+  terrace: boolean;
+  parking: boolean;
+  garage: boolean;
+};
+
+export type Apartments = {
+  id: number;
+  url: string;
+  title: string;
+  price: number;
+  size: number;
+  location: string;
+  city: string;
+  year_of_construction: number;
+  floor: number;
+  total_floors: number;
+  num_of_bathrooms: number;
+  num_of_rooms: number;
+  registered: boolean;
+  elevator: boolean;
+  terrace: boolean;
+  parking: boolean;
+  garage: boolean;
+};
+
 type Repo = {
-  // data: Pick<HousesForRent, "title">[];
   numOfPropertiesForRent: number;
   numOfPropertiesForSale: number;
   numOfHousesForRent: number; // 2.a) - 4 queries
   numOfHousesForSale: number;
   numOfApartmentsForRent: number;
   numOfApartmentsForSale: number;
-  numOfHousesForSaleCity: CountCity[]; // 2.b) - 2
-  numOfApartmentsForSaleCity: CountCity[];
-  numOfHousesForRentRegistered: number; // 2.c) - 8
+  numOfPropertiesForSaleCity: CountCity[]; // 2.b) - 1
+  numOfHousesForRentRegistered: number; // 2.c) - 4
   numOfHousesForSaleRegistered: number;
-  numOfHousesForRentUnRegistered: number;
-  numOfHousesForSaleUnRegistered: number;
   numOfApartmentsForRentRegistered: number;
   numOfApartmentsForSaleRegistered: number;
-  numOfApartmentsForRentUnRegistered: number;
-  numOfApartmentsForSaleUnRegistered: number;
   top30PriceHousesForSale: HousesForSale[]; // 2.d) - 2
   top30PriceApartmentsForSale: ApartmentsForSale[];
-  top100SizeHouses: HousesForRent[]; // 2.e) - 2
-  top100SizeApartments: ApartmentsForRent[];
+  top100SizeHouses: Houses[]; // 2.e) - 2
+  top100SizeApartments: Apartments[];
   constructionYearHousesRent: HousesForRent[]; // 2)f - 4
   constructionYearHousesSale: HousesForSale[];
   constructionYearApartmentsRent: ApartmentsForRent[];
   constructionYearApartmentsSale: ApartmentsForSale[];
-  top30NumOfRoomsHouses: HousesForRent[]; // 2)g1 - 2
-  top30NumOfRoomsApartments: ApartmentsForRent[];
-  top30SizeApartments: ApartmentsForRent[]; // 2)g2 - 1
-  top30LandSizeHouses: HousesForRent[];
+  top30NumOfRoomsHouses: Houses[]; // 2)g1 - 2
+  top30NumOfRoomsApartments: Apartments[];
+  top30SizeApartments: Apartments[]; // 2)g2 - 1
+  top30LandSizeHouses: Houses[];
 };
 
 export const getServerSideProps: GetServerSideProps<Repo> = async () => {
@@ -65,21 +97,15 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
   // houses apartments
   // rent sale
   const [
-    // result,
     numOfHousesForRent, // 2.a) - 4 queries
     numOfHousesForSale,
     numOfApartmentsForRent,
     numOfApartmentsForSale,
-    numOfHousesForSaleCity, // 2.b) - 2
-    numOfApartmentsForSaleCity,
+    numOfPropertiesForSaleCity, // 2.b) - 1
     numOfHousesForRentRegistered, // 2.c) - 8
     numOfHousesForSaleRegistered,
-    numOfHousesForRentUnRegistered,
-    numOfHousesForSaleUnRegistered,
     numOfApartmentsForRentRegistered,
     numOfApartmentsForSaleRegistered,
-    numOfApartmentsForRentUnRegistered,
-    numOfApartmentsForSaleUnRegistered,
     top30PriceHousesForSale, // 2.d) - 2
     top30PriceApartmentsForSale,
     top100SizeHouses, // 2.e) - 2
@@ -92,10 +118,7 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
     top30NumOfRoomsApartments,
     top30SizeApartments, // 2)g2 - 1
     top30LandSizeHouses, // 2)g3 - 1
-    // result, result2
   ] = await Promise.all([
-    // db.select({ title: housesForRent.title }).from(housesForRent).limit(5),
-
     // -------------------------- 2.a) --------------------------
     // 2.a) izlistati koliki je broj nekretnina za prodaju, a koliki je broj koji se iznajmljuju;
     db.select({ count: sql<number>`count(*)` }).from(housesForRent),
@@ -105,14 +128,15 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
 
     // -------------------------- 2.b) --------------------------
     // 2.b) izlistati koliko nekretnina se prodaje u svakom od gradova
-    db
-      .select({ city: housesForSale.city, count: sql<number>`count(*)` })
-      .from(housesForSale)
-      .groupBy(housesForSale.city),
-    db
-      .select({ city: apartmentsForSale.city, count: sql<number>`count(*)` })
-      .from(apartmentsForSale)
-      .groupBy(apartmentsForSale.city),
+    db.execute<CountCity>(sql`Select sale.city, count(*)
+    from (
+      select h.id, h.city from houses_for_sale as h
+      union
+      select a.id, a.city from apartments_for_sale as a
+    ) as sale 
+    group by sale.city
+    order by count desc
+  `),
 
     // -------------------------- 2.c) --------------------------
     // 2.c) izlistati koliko je uknjiženih, a koliko neuknjiženih kuća, a koliko stanova
@@ -126,14 +150,6 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
       .select({ count: sql<number>`count(*)` })
       .from(housesForSale)
       .where(eq(housesForSale.registered, true)),
-    db
-      .select({ count: sql<number>`count(*)` })
-      .from(housesForRent)
-      .where(eq(housesForRent.registered, false)),
-    db
-      .select({ count: sql<number>`count(*)` })
-      .from(housesForSale)
-      .where(eq(housesForSale.registered, false)),
     //apartments
     db
       .select({ count: sql<number>`count(*)` })
@@ -143,17 +159,8 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
       .select({ count: sql<number>`count(*)` })
       .from(apartmentsForSale)
       .where(eq(apartmentsForSale.registered, true)),
-    db
-      .select({ count: sql<number>`count(*)` })
-      .from(apartmentsForRent)
-      .where(eq(apartmentsForRent.registered, false)),
-    db
-      .select({ count: sql<number>`count(*)` })
-      .from(apartmentsForSale)
-      .where(eq(apartmentsForSale.registered, false)),
 
     // -------------------------- 2.d) --------------------------
-    //TODO odvoj querije
     //2.d) prikazati rang listu prvih 30 najskupljih kuća koje se prodaju, i 30 najskupljih stanova koji se prodaju u Srbiji;
     db
       .select()
@@ -168,7 +175,7 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
 
     // -------------------------- 2.e) --------------------------
     //2.e) prikazati rang listu prvih 100 najvećih kuća i 100 najvećih stanova po površini (kvadraturi)
-    db.execute<HousesForRent>(sql`Select *
+    db.execute<Houses>(sql`Select *
       from (
         select * from houses_for_sale
         union
@@ -177,7 +184,7 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
       order by size desc
       limit 100
     `),
-    db.execute<ApartmentsForRent>(sql`Select *
+    db.execute<Apartments>(sql`Select *
         from (
           select * from apartments_for_sale
           union
@@ -189,16 +196,6 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
 
     // -------------------------- 2.f) --------------------------
     //2.f) prikazati rang listu svih nekretnina izgrađenih u 2022. ili 2023. godini, i izlistati ih opadajuće prema ceni prodaje, odnosno ceni iznajmljivanja;
-    //   db.execute(sql`  Select *
-    //       from (
-    //         select * from apartments_for_rent
-    //         where year_of_construction=2022 or year_of_construction=2023
-    //         union
-    //         select * from houses_for_rent
-    //         where year_of_construction=2022 or year_of_construction=2023
-    //       ) as properties
-    //       order by price desc `),
-    // houses
     db
       .select()
       .from(housesForRent)
@@ -245,7 +242,7 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
     //2.g) prikazati nekretnine (Top30) koje imaju:
     // ▪ najveći broj soba unutar nekretnine,
     //TODO: vidi i n a drugim mestima da li dodati is not null
-    db.execute<HousesForRent>(sql`Select *
+    db.execute<Houses>(sql`Select *
       from (
         select * from houses_for_sale
         union
@@ -255,7 +252,7 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
       order by num_of_rooms desc
       limit 30
     `),
-    db.execute<ApartmentsForRent>(sql`Select *
+    db.execute<Apartments>(sql`Select *
       from (
         select * from apartments_for_sale
         union
@@ -267,7 +264,7 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
     `),
 
     // ▪ najveću kvadraturu (samo za stanove),
-    db.execute<ApartmentsForRent>(sql`Select *
+    db.execute<Apartments>(sql`Select *
     from (
       select * from apartments_for_sale
       union
@@ -278,7 +275,7 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
     limit 30
   `),
     // ▪ najveću površinu zemljišta (samo za kuće)
-    db.execute<HousesForRent>(sql`Select *
+    db.execute<Houses>(sql`Select *
     from (
       select * from houses_for_sale
       union
@@ -288,26 +285,13 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
     order by land_surface desc
     limit 30
   `),
-    db
-      .select()
-      .from(apartmentsForSale)
-      .orderBy(desc(apartmentsForSale.price))
-      .limit(30),
   ]);
-  // console.log((result2.rows as HousesForRent[])[0]);
-  // console.log(typeof numOfHousesForRent[0].count);
-  // console.log(numOfHousesForSaleCity);
-  // numOfApartmentsForSaleCity)
-  // const tmp = db
-  //   .select({ title: housesForRent.title })
-  //   .from(housesForRent)
-  //   .limit(30);
-  // console.log(typeof numOfHousesForRent);
+
   const numOfPropertiesForRent: number =
     +numOfHousesForRent[0].count + +numOfApartmentsForRent[0].count;
   const numOfPropertiesForSale: number =
     +numOfHousesForSale[0].count + +numOfApartmentsForSale[0].count;
-  // console.log(top100SizeHouses.rows);
+
   return {
     props: {
       numOfPropertiesForRent,
@@ -316,20 +300,13 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
       numOfHousesForSale: +numOfHousesForSale[0].count,
       numOfApartmentsForRent: +numOfApartmentsForRent[0].count,
       numOfApartmentsForSale: +numOfApartmentsForSale[0].count,
-      numOfHousesForSaleCity: numOfHousesForSaleCity, // 2.b) - 2
-      numOfApartmentsForSaleCity: numOfApartmentsForSaleCity,
-      numOfHousesForRentRegistered: +numOfHousesForRentRegistered[0].count, // 2.c) - 8
+      numOfPropertiesForSaleCity: numOfPropertiesForSaleCity.rows, // 2.b) - 1
+      numOfHousesForRentRegistered: +numOfHousesForRentRegistered[0].count, // 2.c) - 4
       numOfHousesForSaleRegistered: +numOfHousesForSaleRegistered[0].count,
-      numOfHousesForRentUnRegistered: +numOfHousesForRentUnRegistered[0].count,
-      numOfHousesForSaleUnRegistered: +numOfHousesForSaleUnRegistered[0].count,
       numOfApartmentsForRentRegistered:
         +numOfApartmentsForRentRegistered[0].count,
       numOfApartmentsForSaleRegistered:
         +numOfApartmentsForSaleRegistered[0].count,
-      numOfApartmentsForRentUnRegistered:
-        +numOfApartmentsForRentUnRegistered[0].count,
-      numOfApartmentsForSaleUnRegistered:
-        +numOfApartmentsForSaleUnRegistered[0].count,
       top30PriceHousesForSale, // 2.d) - 2
       top30PriceApartmentsForSale,
       top100SizeHouses: top100SizeHouses.rows, // 2.e) - 2
@@ -344,7 +321,6 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
       top30LandSizeHouses: top30LandSizeHouses.rows, // 2)g3 - 1},
     },
   };
-  // const inter = Inter({ subsets: ["latin"] });
 };
 export default function Task2({
   numOfPropertiesForRent,
@@ -353,16 +329,11 @@ export default function Task2({
   numOfHousesForSale,
   numOfApartmentsForRent,
   numOfApartmentsForSale,
-  numOfHousesForSaleCity, // 2.b) - 2
-  numOfApartmentsForSaleCity,
-  numOfHousesForRentRegistered, // 2.c) - 8
+  numOfPropertiesForSaleCity, // 2.b) - 1
+  numOfHousesForRentRegistered, // 2.c) - 4
   numOfHousesForSaleRegistered,
-  numOfHousesForRentUnRegistered,
-  numOfHousesForSaleUnRegistered,
   numOfApartmentsForRentRegistered,
   numOfApartmentsForSaleRegistered,
-  numOfApartmentsForRentUnRegistered,
-  numOfApartmentsForSaleUnRegistered,
   top30PriceHousesForSale, // 2.d) - 2
   top30PriceApartmentsForSale,
   top100SizeHouses, // 2.e) - 2
@@ -375,31 +346,32 @@ export default function Task2({
   top30NumOfRoomsApartments,
   top30SizeApartments, // 2)g2 - 1
   top30LandSizeHouses, // 2)g3 - 1},
-}: // data,
-
-InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        {/* <Task2 data={data} numOfRentedProperties={0} /> */}
-        {/* {numOfPropertiesForRent}
-        <br />
-        {numOfPropertiesForSale} */}
         <div className="flex flex-col items-center gap-10 mt-10 px-10 mx-20">
+          <Link href={"/task3"} className="btn">
+            Go to task3
+          </Link>
           {/* // -------------------------- 2.a) -------------------------- */}
           <Card
             title="Task 2a)"
             data={
               <>
-                <div> numOfPropertiesForRent: {numOfPropertiesForRent}</div>
-                <div> numOfPropertiesForSale: {numOfPropertiesForSale}</div>
+                <div>
+                  Number of properties for rent: {numOfPropertiesForRent}
+                </div>
+                <div>
+                  Number of properties for sale: {numOfPropertiesForSale}
+                </div>
               </>
             }
           />
 
           {/* // -------------------------- 2.b) -------------------------- */}
           <Card
-            title="Task 2b)"
+            title="Task 2b) - koliko nekretnina se prodaje u svakom od gradova"
             data={
               <>
                 <div className=" overflow-y-auto max-w-xs max-h-96">
@@ -412,7 +384,7 @@ InferGetServerSidePropsType<typeof getServerSideProps>) {
                       </tr>
                     </thead>
                     <tbody>
-                      {numOfHousesForSaleCity.map((row, i) => (
+                      {numOfPropertiesForSaleCity?.map((row, i) => (
                         <>
                           <tr>
                             <th>{i}</th>
@@ -439,15 +411,10 @@ InferGetServerSidePropsType<typeof getServerSideProps>) {
                 </div>
                 <div>
                   unregistered:
-                  {numOfHousesForRentUnRegistered +
-                    numOfHousesForSaleUnRegistered}
-                </div>
-                <div>
-                  undefined registered:
                   {numOfHousesForRent +
                     numOfHousesForSale -
-                    numOfHousesForRentUnRegistered -
-                    numOfHousesForSaleUnRegistered}
+                    numOfHousesForRentRegistered -
+                    numOfHousesForSaleRegistered}
                 </div>
                 <div className="text-2xl">Apartments:</div>
                 <div>
@@ -457,11 +424,6 @@ InferGetServerSidePropsType<typeof getServerSideProps>) {
                 </div>
                 <div>
                   unregistered:
-                  {numOfApartmentsForRentUnRegistered +
-                    numOfApartmentsForSaleUnRegistered}
-                </div>
-                <div>
-                  undefined registered:
                   {numOfApartmentsForRent +
                     numOfApartmentsForSale -
                     numOfApartmentsForRentRegistered -
@@ -472,57 +434,61 @@ InferGetServerSidePropsType<typeof getServerSideProps>) {
           />
           {/* // -------------------------- 2.d) -------------------------- */}
           <Card
-            title="Task 2d) houses"
+            title="Task 2d) houses - top 30 najskupljih kuća koje se prodaju"
             data={<TableHouses data={top30PriceHousesForSale} />}
           />
           <Card
-            title="Task 2d) apartments"
+            title="Task 2d) apartments -  30 najskupljih stanova koje se prodaju"
             data={<TableApartments data={top30PriceApartmentsForSale} />}
           />
 
           {/* // -------------------------- 2.e) -------------------------- */}
           <Card
-            title="Task 2e) houses"
+            title="Task 2e) houses - top 100 najvećih kuća po površini"
             data={<TableHouses data={top100SizeHouses} />}
           />
           <Card
-            title="Task 2e) apartments"
+            title="Task 2e) apartments - top 100 najvećih stanova po površini"
             data={<TableApartments data={top100SizeApartments} />}
           />
 
           {/* // -------------------------- 2.f) -------------------------- */}
           <Card
-            title="Task 2f) houses rent"
+            title="Task 2f) houses rent - izgrađenih u 2022. ili 2023. godini, i izlistati ih 
+            opadajuće prema ceni"
             data={<TableHouses data={constructionYearHousesRent} />}
           />
           <Card
-            title="Task 2f) houses sale"
+            title="Task 2f) houses sale - izgrađenih u 2022. ili 2023. godini, i izlistati ih 
+            opadajuće prema ceni"
             data={<TableHouses data={constructionYearHousesSale} />}
           />
           <Card
-            title="Task 2f) apartments rent"
+            title="Task 2f) apartments rent - izgrađenih u 2022. ili 2023. godini, i izlistati ih 
+            opadajuće prema ceni"
             data={<TableApartments data={constructionYearApartmentsRent} />}
           />
           <Card
-            title="Task 2f) apartments sale"
+            title="Task 2f) apartments sale - izgrađenih u 2022. ili 2023. godini, i izlistati ih 
+            opadajuće prema ceni"
             data={<TableApartments data={constructionYearApartmentsSale} />}
           />
 
           {/* // -------------------------- 2.g) -------------------------- */}
           <Card
-            title="Task 2g)1 houses"
+            title="Task 2g)1 houses - top 30: najveći broj soba"
             data={<TableHouses data={top30NumOfRoomsHouses} />}
           />
           <Card
-            title="Task 2g)1 apartments"
+            title="Task 2g)1 apartments - top 30:  najveći broj soba"
             data={<TableApartments data={top30NumOfRoomsApartments} />}
           />
           <Card
-            title="Task 2g)2 apartments"
+            title="Task 2g)2 apartments - top 30: najveću kvadraturu"
             data={<TableApartments data={top30SizeApartments} />}
           />
           <Card
-            title="Task 2g)3 houses"
+            title="Task 2g)3 houses - top 30: najveću površinu zemljišta"
             data={<TableHouses data={top30LandSizeHouses} />}
           />
         </div>

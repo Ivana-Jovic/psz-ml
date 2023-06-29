@@ -2,7 +2,12 @@ import { LocationRentSaleCount } from "@/pages/task3";
 import React from "react";
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from "recharts";
 
-function RePieChart({ data }: { data: LocationRentSaleCount[] }) {
+function PieChartTask3D({ data }: { data: LocationRentSaleCount[] }) {
+  let total = 0;
+  data.forEach((elem) => {
+    total += elem.count;
+  });
+
   return (
     <div className="flex flex-col items-center">
       <div className="text-3xl">{data[0].location}</div>
@@ -42,7 +47,7 @@ function RePieChart({ data }: { data: LocationRentSaleCount[] }) {
               >
                 {data[index].isRent ? "Rent" : "Sale"}&nbsp;{value}&nbsp;(
                 {(
-                  (data[0].count * 100) /
+                  (data[index].count * 100) /
                   (data[0].count + data[1].count)
                 ).toFixed(2)}
                 %)
@@ -55,4 +60,4 @@ function RePieChart({ data }: { data: LocationRentSaleCount[] }) {
   );
 }
 
-export default RePieChart;
+export default PieChartTask3D;
