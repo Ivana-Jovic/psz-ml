@@ -19,6 +19,8 @@ import PieChartTask3F from "@/components/pieChartTask3F";
 import Link from "next/link";
 
 // TODO: napraviti kartice
+//TODO: provera osnovnih polja ili isOk polja za svaki upit- uradjenosamo za 2a)
+
 type LocationCount = {
   location: string;
   count: number;

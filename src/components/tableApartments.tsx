@@ -49,7 +49,7 @@ function TableApartments({
         <tbody>
           {data.map((row, i) => (
             <>
-              <tr>
+              <tr key={row.url}>
                 <th>{i}</th>
                 <td>{row.id}</td>
                 <td>{row.url}</td>

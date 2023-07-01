@@ -16,20 +16,16 @@ import Link from "next/link";
 
 //todo check if uopste valid
 // todo dodaj valid offer polje
-export default function Home() {
+const Task4 = () => {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
-      <div className="px-10 flex flex-col gap-20 justify-center items-center min-h-screen">
-        <Link href={"/task2"} className="btn">
-          Go to task2
-        </Link>
-        <Link href={"/task3"} className="btn">
-          Go to task3
-        </Link>
-        <Link href={"/task4"} className="btn">
-          Go to task4
+      <div className="flex flex-col items-center gap-10">
+        <Link href={"/"} className="btn">
+          Go to home
         </Link>
       </div>
     </main>
   );
-}
+};
+
+export default Task4;

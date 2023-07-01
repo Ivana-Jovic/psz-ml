@@ -38,6 +38,7 @@ export const housesForRent = pgTable(
     heatingGas: boolean("heating_gas"),
     heatingSolidFuel: boolean("heating_solid_fuel"),
     heatingOther: boolean("heating_other"),
+    validOffer: boolean("valid_offer"),
   },
   (housesForRent) => {
     return {

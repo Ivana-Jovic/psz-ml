@@ -17,7 +17,7 @@ import TableApartments from "@/components/tableApartments";
 import TableHouses from "@/components/tableHouses";
 import Link from "next/link";
 
-//TODO: provera osnovnih polja ili isOk polja za svaki upit
+//TODO: provera osnovnih polja ili isOk polja za svaki upit- uradjenosamo za 2a)
 
 type CountCity = {
   count: number;
@@ -121,10 +121,22 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
   ] = await Promise.all([
     // -------------------------- 2.a) --------------------------
     // 2.a) izlistati koliki je broj nekretnina za prodaju, a koliki je broj koji se iznajmljuju;
-    db.select({ count: sql<number>`count(*)` }).from(housesForRent),
-    db.select({ count: sql<number>`count(*)` }).from(housesForSale),
-    db.select({ count: sql<number>`count(*)` }).from(apartmentsForRent),
-    db.select({ count: sql<number>`count(*)` }).from(apartmentsForSale),
+    db
+      .select({ count: sql<number>`count(*)` })
+      .from(housesForRent)
+      .where(eq(housesForRent.validOffer, true)),
+    db
+      .select({ count: sql<number>`count(*)` })
+      .from(housesForSale)
+      .where(eq(housesForSale.validOffer, true)),
+    db
+      .select({ count: sql<number>`count(*)` })
+      .from(apartmentsForRent)
+      .where(eq(apartmentsForRent.validOffer, true)),
+    db
+      .select({ count: sql<number>`count(*)` })
+      .from(apartmentsForSale)
+      .where(eq(apartmentsForSale.validOffer, true)),
 
     // -------------------------- 2.b) --------------------------
     // 2.b) izlistati koliko nekretnina se prodaje u svakom od gradova
@@ -386,7 +398,7 @@ export default function Task2({
                     <tbody>
                       {numOfPropertiesForSaleCity?.map((row, i) => (
                         <>
-                          <tr>
+                          <tr key="row.url">
                             <th>{i}</th>
                             <td>{row.city}</td>
                             <td>{row.count}</td>
