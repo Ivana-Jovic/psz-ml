@@ -48,41 +48,39 @@ function TableApartments({
         </thead>
         <tbody>
           {data.map((row, i) => (
-            <>
-              <tr key={row.url}>
-                <th>{i}</th>
-                <td>{row.id}</td>
-                <td>{row.url}</td>
-                <td>{row.title}</td>
-                <td>{row.price}</td>
-                <td>{row.size}</td>
-                <td>{row.location}</td>
-                <td>{row.city}</td>
-                <td>
-                  {isApartments(row) && row.year_of_construction}
-                  {isApartmentsForSale(row) && row.yearOfConstruction}
-                </td>
-                <td>{row.floor}</td>
-                <td>
-                  {isApartments(row) && row.total_floors}
-                  {isApartmentsForSale(row) && row.totalFloors}
-                </td>
-                <td>
-                  {isApartments(row) && row.num_of_bathrooms}
-                  {isApartmentsForSale(row) && row.numOfBathrooms}
-                </td>
-                <td>
-                  {isApartments(row) && row.num_of_rooms}
-                  {isApartmentsForSale(row) && row.numOfRooms}
-                </td>
-                <td>{row.registered ? "yes" : "no"}</td>
-                <td>{row.elevator ? "yes" : "no"}</td>
-                <td>{row.terrace ? "yes" : "no"}</td>
-                <td>{row.parking ? "yes" : "no"}</td>
-                <td>{row.garage ? "yes" : "no"}</td>
-                {/* <td>{row.validOffer}</td> */}
-              </tr>
-            </>
+            <tr key={row.url}>
+              <th>{i}</th>
+              <td>{row.id}</td>
+              <td>{row.url}</td>
+              <td>{row.title}</td>
+              <td>{row.price}</td>
+              <td>{row.size}</td>
+              <td>{row.location}</td>
+              <td>{row.city}</td>
+              <td>
+                {isApartments(row) && row.year_of_construction}
+                {isApartmentsForSale(row) && row.yearOfConstruction}
+              </td>
+              <td>{row.floor}</td>
+              <td>
+                {isApartments(row) && row.total_floors}
+                {isApartmentsForSale(row) && row.totalFloors}
+              </td>
+              <td>
+                {isApartments(row) && row.num_of_bathrooms}
+                {isApartmentsForSale(row) && row.numOfBathrooms}
+              </td>
+              <td>
+                {isApartments(row) && row.num_of_rooms}
+                {isApartmentsForSale(row) && row.numOfRooms}
+              </td>
+              <td>{row.registered ? "yes" : "no"}</td>
+              <td>{row.elevator ? "yes" : "no"}</td>
+              <td>{row.terrace ? "yes" : "no"}</td>
+              <td>{row.parking ? "yes" : "no"}</td>
+              <td>{row.garage ? "yes" : "no"}</td>
+              {/* <td>{row.validOffer}</td> */}
+            </tr>
           ))}
         </tbody>
       </table>

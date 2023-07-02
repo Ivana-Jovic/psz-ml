@@ -1,191 +1,184 @@
 const locations = [
-  "29. Novembra", //ok
-  //   "Ada Ciganlija",
-  //   "Altina",
-  "Andrićev venac", //ok
-  //   "Voždovac (sve podlokacije)",
-  "Autokomanda", //ok
-  //   "Avala",
-  "Banjica", //ok
-  //   "Beli potok",
-  //   "Braće Jerković",
-  //   "Bubanj potok",
-  //   "Dušanovac",
-  //   "Farmaceutski fakultet",
-  //   "Jajinci",
-  "Konjarnik", //ok
-  "Lekino brdo", //ok
-  //   "Marinkova bara",
-  //   "Pašino brdo",
-  //   "Stepa Stepanović",
-  //   "Šumice",
-  //   "Torlak",
-  //   "Trošarina",
-  //   "Veljko Vlahović",
-  //   "Voždovac",
-  //   "Autoput",
-  "Bajlonijeva pijaca", //ok
-  "Banija", //ok
-  //   "Banovo brdo",
-  //   "Barajevo",
-  //   "Batajnica",
-  //   "Belaci",
-  //   "Bele vode",
-  "Beograd na vodi", //ok
-  //   "Centar (sve podlokacije)", //ok
-  "Centar", //ok
-  "Beograđanka ( centar )", //ok
-  "Centar (uži)", //ok
-  "Knez Mihajlova ( centar )", //ok
+  "29. Novembra",
+  "Ada Ciganlija",
+  "Altina",
+  "Andrićev venac",
+  "Voždovac (sve podlokacije)",
+  "Autokomanda",
+  "Avala",
+  "Banjica",
+  "Beli potok",
+  "Braće Jerković",
+  "Bubanj potok",
+  "Dušanovac",
+  "Farmaceutski fakultet",
+  "Jajinci",
+  "Konjarnik",
+  "Lekino brdo",
+  "Marinkova bara",
+  "Pašino brdo",
+  "Stepa Stepanović",
+  "Šumice",
+  "Torlak",
+  "Trošarina",
+  "Veljko Vlahović",
+  "Voždovac",
+  "Autoput",
+  "Bajlonijeva pijaca",
+  "Banija",
+  "Banovo brdo",
+  "Barajevo",
+  "Batajnica",
+  "Belaci",
+  "Bele vode",
+  "Beograd na vodi",
+  "Centar (sve podlokacije)",
+  "Beograđanka ( centar )",
+  "Centar (uži)",
+  "Knez Mihajlova ( centar )",
   "Kneza Miloša ( centar )",
-  "Politika ( centar )", //ok
-  "Stari Grad", //ok
-  "Studentski Trg ( centar )", //ok
-  "Terazije ( centar )", //ok
-  "Trg Republike ( centar )", //ok
-  "Bežanija", //ok
-  //   "Bežanijska kosa (sve podlokacije)", //ok
-  "Bežanijska kosa", //ok
-  "Bežanijska kosa I", //ok
-  "Bežanijska kosa II", //ok
-  "Bežanijska kosa III", //ok//ok
-  //   "Palilula (sve podlokacije)",
-  "Bogoslovija", //ok
-  "Botanička bašta", //ok
-  "Cvijićeva", //ok
-  //   "Hadžipopovac",
-  //   "Hala Pionir",
-  //   "Karaburma",
-  //   "Kotež",
-  //   "Krnjača",
-  //   "Ovča",
-  //   "Padinska skela",
-  //   "Palilula",
-  //   "Palilulska pijaca",
-  //   "Poštanska štedionica",
-  //   "Profesorska kolonija",
-  //   "Rospi ćuprija",
-  //   "Tašmajdan",
-  //   "Viline vode",
-  //   "Višnjica",
-  //   "Višnjička banja",
-  //   "Borča (Sve podlokacije)",
-  //   "Borča I",
-  //   "Borča II",
-  //   "Borča III",
-  //   "Borča IV",
-  //   "Borča V",
+  "Politika ( centar )",
+  "Stari Grad",
+  "Studentski Trg ( centar )",
+  "Terazije ( centar )",
+  "Trg Republike ( centar )",
+  "Bežanija",
+  "Bežanijska kosa (sve podlokacije)",
+  "Bežanijska kosa I",
+  "Bežanijska kosa II",
+  "Bežanijska kosa III",
+  "Palilula (sve podlokacije)",
+  "Bogoslovija",
+  "Botanička bašta",
+  "Cvijićeva",
+  "Hadžipopovac",
+  "Hala Pionir",
+  "Karaburma",
+  "Kotež",
+  "Krnjača",
+  "Ovča",
+  "Padinska skela",
+  "Palilula",
+  "Palilulska pijaca",
+  "Poštanska štedionica",
+  "Profesorska kolonija",
+  "Rospi ćuprija",
+  "Tašmajdan",
+  "Viline vode",
+  "Višnjica",
+  "Višnjička banja",
+  "Borča (Sve podlokacije)",
+  "Borča I",
+  "Borča II",
+  "Borča III",
+  "Borča IV",
+  "Borča V",
   "Brodogradilište Beograd",
-  //   "Brzi Brod",
-  //   "Zvezdara (sve podlokacije)", //ok
-  "Zvezdara", //ok
-  "Bulbuder", //ok
-  "Bulevar Kr. Aleksandra", //ok
-  "Cvetanova ćuprija", //ok
-  "Cvetkova pijaca", //ok
-  "Denkova bašta", //ok
-  "Đeram pijaca", //ok
-  "Gradska bolnica", //ok
-  //   "Kluz",
-  "Lion", //ok
-  "Lipov lad", //ok
-  "Mali mokri lug", //ok
-  "Novo groblje", //ok
-  "Olimp", //ok
-  "Rudo", //ok
-  "Severni bulevar", //ok
-  "Slavujev venac", //ok
-  //   "Smederevski put",
-  "Učiteljsko naselje", //ok
-  "Veliki mokri lug", //ok
-  "Vukov spomenik", //ok
-  "Zeleno Brdo", //ok
-  "Zira", //ok
-  "Zvezdara", //ok
-  "Zvezdarska Šuma", //ok
-  //   "Cerak vinogradi",
-  //   "Cerak",
-  //   "Cerski venac",
-  //   "Vračar (sve podlokacije)", //ok
-  "Vračar", //ok
-  //   "Crveni krst",
-  "Čubura", //ok
-  "Cvetni trg", //ok
+  "Brzi Brod",
+  "Zvezdara (sve podlokacije)",
+  "Bulbuder",
+  "Bulevar Kr. Aleksandra",
+  "Cvetanova ćuprija",
+  "Cvetkova pijaca",
+  "Denkova bašta",
+  "Đeram pijaca",
+  "Gradska bolnica",
+  "Kluz",
+  "Lion",
+  "Lipov lad",
+  "Mali mokri lug",
+  "Novo groblje",
+  "Olimp",
+  "Rudo",
+  "Severni bulevar",
+  "Slavujev venac",
+  "Smederevski put",
+  "Učiteljsko naselje",
+  "Veliki mokri lug",
+  "Vukov spomenik",
+  "Zeleno Brdo",
+  "Zira",
+  "Zvezdara",
+  "Zvezdarska Šuma",
+  "Cerak vinogradi",
+  "Cerak",
+  "Cerski venac",
+  "Vračar (sve podlokacije)",
+  "Crveni krst",
+  "Čubura",
+  "Cvetni trg",
   "Gradic Pejton",
-  "Južni bulevar", //ok
+  "Južni bulevar",
   "Kalenić pijaca",
   "Neimar",
   "Slavija",
-  "Vračar (Centar)", //ok
-  "Vračar (Hram)", //ok
+  "Vračar (Centar)",
+  "Vračar (Hram)",
   "Čukarica",
   "Čukarička padina",
-  //   "Dedinje (sve podlokacije)", //ok"
-  "Dedinje", //ok
-  "Dedinje (25. maj)", //ok
-  "Dedinje (Beli dvor)", //ok
-  "Dedinje (RTV Pink)", //ok
+  "Dedinje (sve podlokacije)",
+  "Dedinje (25. maj)",
+  "Dedinje (Beli dvor)",
+  "Dedinje (RTV Pink)",
   "Dobanovci",
-  //   "Dorćol (sve podlokacije)", //ok
-  "Dorćol", //ok
-  "Donji Dorćol", //ok
+  "Dorćol (sve podlokacije)",
+  "Donji Dorćol",
   "Dunavski kej",
-  "Gornji Dorćol", //ok
-  "Strahinjića Bana", //ok
-  //   "Filmski grad",
-  //   "Galenika",
-  //   "Glumčevo brdo",
-  //   "Golf naselje",
-  //   "Greda",
-  //   "Grocka",
-  "Gundulićev venac", //ok
-  //   "Hipodrom",
-  //   "Ibarska magistrala",
-  //   "Industrijska zona jug",
-  //   "Institut za majku i dete",
-  //   "Jabučki rit",
-  //   "Jelovac",
-  //   "Julino brdo",
-  "Kablar", //ok
-  "Kalemegdan", //ok
-  //   "Kaluđerica",
-  //   "Kanarevo brdo",
-  //   "Karađorđeva",
-  //   "Kijevo",
-  "Klinički centar", //ok
-  //   "Kneževac",
-  "Kopitareva gradina", //ok
-  "Kosančićev venac", //ok
-  //   "Košutnjak",
-  //   "Kumodraž (sve podlokacije)",
-  //   "Kumodraž I",
-  //   "Kumodraž II",
-  // "Labudovo brdo",
-  //   "Ledine",
-  //   "Leštane",
-  //   "Lipovačka šuma",
-  //   "Lisičji jarak",
-  "Lisičji potok", //ok
-  "Mačkov kamen", //ok
-  //   "Makiš",
-  "Manjež", //ok
-  //   "Medaković (sve podlokacije)",
-  //   "Medak padina",
-  //   "Medaković I",
-  //   "Medaković II",
-  //   "Medaković III",
-  //   "Miljakovac (sve podlokacije)",
-  //   "Miljakovac I",
-  //   "Miljakovac II",
-  //   "Miljakovac III",
-  //   "Milka Protic (KP dom)",
-  //   "Mirijevo (sve podlokacije)", //ok
-  "Mirijevo", //ok
-  "Mirijevo I", //ok
-  "Mirijevo II", //ok
-  "Mirijevo III", //ok
-  "Mirijevo IV", //ok
-  //   "Novi Beograd (sve podlokacije)",
+  "Gornji Dorćol",
+  "Strahinjića Bana",
+  "Filmski grad",
+  "Galenika",
+  "Glumčevo brdo",
+  "Golf naselje",
+  "Greda",
+  "Grocka",
+  "Gundulićev venac",
+  "Hipodrom",
+  "Ibarska magistrala",
+  "Industrijska zona jug",
+  "Institut za majku i dete",
+  "Jabučki rit",
+  "Jelovac",
+  "Julino brdo",
+  "Kablar",
+  "Kalemegdan",
+  "Kaluđerica",
+  "Kanarevo brdo",
+  "Karađorđeva",
+  "Kijevo",
+  "Klinički centar",
+  "Kneževac",
+  "Kopitareva gradina",
+  "Kosančićev venac",
+  "Košutnjak",
+  "Kumodraž (sve podlokacije)",
+  "Kumodraž I",
+  "Kumodraž II",
+  "Labudovo brdo",
+  "Ledine",
+  "Leštane",
+  "Lipovačka šuma",
+  "Lisičji jarak",
+  "Lisičji potok",
+  "Mačkov kamen",
+  "Makiš",
+  "Manjež",
+  "Medaković (sve podlokacije)",
+  "Medak padina",
+  "Medaković I",
+  "Medaković II",
+  "Medaković III",
+  "Miljakovac (sve podlokacije)",
+  "Miljakovac I",
+  "Miljakovac II",
+  "Miljakovac III",
+  "Milka Protic (KP dom)",
+  "Mirijevo (sve podlokacije)",
+  "Mirijevo I",
+  "Mirijevo II",
+  "Mirijevo III",
+  "Mirijevo IV",
+  "Novi Beograd (sve podlokacije)",
   "Novi Beograd",
   "Novi Beograd Blok 1 (Fontana)",
   "Novi Beograd Blok 10",
@@ -256,65 +249,65 @@ const locations = [
   "Novi Beograd Blok 8a (Paviljoni)",
   "Novi Beograd Blok 9",
   "Novi Beograd Blok 9a (Dom Zdravlja)",
-  "Obilićev venac", //ok
-  //   "Orlovača",
-  //   "Ostružnica",
-  "Palata pravde", //ok
-  //   "Pančevački most",
-  "Partizanov stadion", //ok
-  //   "Petlovo brdo",
-  "Pionirski park", //ok
-  //   "Plavi Horizonti",
-  //   "Pregrevica",
-  //   "Radiofar",
-  //   "Rakovica",
-  //   "Resnik",
-  //   "Retenzija",
-  //   "Reva",
-  //   "Rušanj",
-  "Sarajevska", //ok
-  "Sava mala", //ok
-  "Savski trg", //ok
-  "Savski venac", //ok
-  "Senjak", //ok
-  "Skadarlija", //ok
-  //   "Skojevsko naselje",
-  //   "Sopot",
-  //   "Sremčica",
-  "Sunčana padina", //ok
-  //   "Sunčani breg",
-  //   "Surčin",
-  //   "Tehnicki fakulteti",
-  "Topčider", //ok
-  "Topličin venac", //ok
-  "Tošin bunar", //ok
-  //   "Trešnja",
-  //   "Vidikovac",
-  //   "Vidikovačka padina",
-  //   "Vidikovački venac",
-  //   "Vinča",
-  //   "Vojvode Vlahovića",
-  //   "Žarkovo",
-  "Zeleni venac", //ok
-  //   "Železnik",
-  //   "Zemun (sve podlokacije)",
-  //   "Zemun (13. maj)",
-  //   "Zemun (Bačka)",
-  //   "Zemun (Cara Dušana)",
-  //   "Zemun (Centar)",
-  //   "Zemun (Ćukovac)",
-  //   "Zemun (Donji grad)",
-  //   "Zemun (Gardoš)",
-  //   "Zemun (Gornji grad)",
-  //   "Zemun (Kalvarija)",
-  //   "Zemun (Kej)",
-  //   "Zemun (Marije Bursać)",
-  //   "Zemun (Meandri)",
-  //   "Zemun (Nova Galenika)",
-  //   "Zemun (Novi Grad)",
-  //   "Zemun (Save Kovačevića)",
-  //   "Zemun (Sutjeska)",
-  //   "Zemun (Teleoptik)",
-  //   "Zemun Polje",
-  "Zvezdin stadion", //ok
+  "Obilićev venac",
+  "Orlovača",
+  "Ostružnica",
+  "Palata pravde",
+  "Pančevački most",
+  "Partizanov stadion",
+  "Petlovo brdo",
+  "Pionirski park",
+  "Plavi Horizonti",
+  "Pregrevica",
+  "Radiofar",
+  "Rakovica",
+  "Resnik",
+  "Retenzija",
+  "Reva",
+  "Rušanj",
+  "Sarajevska",
+  "Sava mala",
+  "Savski trg",
+  "Savski venac",
+  "Senjak",
+  "Skadarlija",
+  "Skojevsko naselje",
+  "Sopot",
+  "Sremčica",
+  "Sunčana padina",
+  "Sunčani breg",
+  "Surčin",
+  "Tehnicki fakulteti",
+  "Topčider",
+  "Topličin venac",
+  "Tošin bunar",
+  "Trešnja",
+  "Vidikovac",
+  "Vidikovačka padina",
+  "Vidikovački venac",
+  "Vinča",
+  "Vojvode Vlahovića",
+  "Žarkovo",
+  "Zeleni venac",
+  "Železnik",
+  "Zemun (sve podlokacije)",
+  "Zemun (13. maj)",
+  "Zemun (Bačka)",
+  "Zemun (Cara Dušana)",
+  "Zemun (Centar)",
+  "Zemun (Ćukovac)",
+  "Zemun (Donji grad)",
+  "Zemun (Gardoš)",
+  "Zemun (Gornji grad)",
+  "Zemun (Kalvarija)",
+  "Zemun (Kej)",
+  "Zemun (Marije Bursać)",
+  "Zemun (Meandri)",
+  "Zemun (Nova Galenika)",
+  "Zemun (Novi Grad)",
+  "Zemun (Save Kovačevića)",
+  "Zemun (Sutjeska)",
+  "Zemun (Teleoptik)",
+  "Zemun Polje",
+  "Zvezdin stadion",
 ];

@@ -354,7 +354,7 @@ export default function Task3({
           ))}
         </div>
       </div>
-      {/* --------- 3.e) ---------*/}
+      {/* --------- 3.e) ---------*/}25676
       <div className="flex flex-col items-center  gap-10">
         <div className="text-5xl text-center">
           3.e. Broj (i procentualni odnos) svih nekretnina za prodaju, koje po

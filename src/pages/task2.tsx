@@ -142,9 +142,9 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
     // 2.b) izlistati koliko nekretnina se prodaje u svakom od gradova
     db.execute<CountCity>(sql`Select sale.city, count(*)
     from (
-      select h.id, h.city from houses_for_sale as h
+      select h.id, h.city from houses_for_sale as h where h.valid_offer is true
       union
-      select a.id, a.city from apartments_for_sale as a
+      select a.id, a.city from apartments_for_sale as a where a.valid_offer is true
     ) as sale 
     group by sale.city
     order by count desc
@@ -157,31 +157,37 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
     db
       .select({ count: sql<number>`count(*)` })
       .from(housesForRent)
-      .where(eq(housesForRent.registered, true)),
+      .where(eq(housesForRent.registered, true))
+      .where(eq(housesForRent.validOffer, true)),
     db
       .select({ count: sql<number>`count(*)` })
       .from(housesForSale)
-      .where(eq(housesForSale.registered, true)),
+      .where(eq(housesForSale.registered, true))
+      .where(eq(housesForSale.validOffer, true)),
     //apartments
     db
       .select({ count: sql<number>`count(*)` })
       .from(apartmentsForRent)
-      .where(eq(apartmentsForRent.registered, true)),
+      .where(eq(apartmentsForRent.registered, true))
+      .where(eq(apartmentsForRent.validOffer, true)),
     db
       .select({ count: sql<number>`count(*)` })
       .from(apartmentsForSale)
-      .where(eq(apartmentsForSale.registered, true)),
+      .where(eq(apartmentsForSale.registered, true))
+      .where(eq(apartmentsForSale.validOffer, true)),
 
     // -------------------------- 2.d) --------------------------
     //2.d) prikazati rang listu prvih 30 najskupljih kuća koje se prodaju, i 30 najskupljih stanova koji se prodaju u Srbiji;
     db
       .select()
       .from(housesForSale)
+      .where(eq(housesForSale.validOffer, true))
       .orderBy(desc(housesForSale.price))
       .limit(30),
     db
       .select()
       .from(apartmentsForSale)
+      .where(eq(apartmentsForSale.validOffer, true))
       .orderBy(desc(apartmentsForSale.price))
       .limit(30),
 
@@ -189,18 +195,18 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
     //2.e) prikazati rang listu prvih 100 najvećih kuća i 100 najvećih stanova po površini (kvadraturi)
     db.execute<Houses>(sql`Select *
       from (
-        select * from houses_for_sale
+        select * from houses_for_sale where valid_offer = true
         union
-        select * from houses_for_rent
+        select * from houses_for_rent where valid_offer = true
       ) as houses
       order by size desc
       limit 100
     `),
     db.execute<Apartments>(sql`Select *
         from (
-          select * from apartments_for_sale
+          select * from apartments_for_sale where valid_offer = true
           union
-          select * from apartments_for_rent
+          select * from apartments_for_rent where valid_offer = true
         ) as apartments
         order by size desc
         limit 100
@@ -217,6 +223,7 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
           eq(housesForRent.yearOfConstruction, 2023)
         )
       )
+      .where(eq(housesForRent.validOffer, true))
       .orderBy(desc(housesForRent.price)),
     db
       .select()
@@ -227,6 +234,7 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
           eq(housesForSale.yearOfConstruction, 2023)
         )
       )
+      .where(eq(housesForSale.validOffer, true))
       .orderBy(desc(housesForSale.price)),
     //apartments
     db
@@ -238,6 +246,7 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
           eq(apartmentsForRent.yearOfConstruction, 2023)
         )
       )
+      .where(eq(apartmentsForRent.validOffer, true))
       .orderBy(desc(apartmentsForRent.price)),
     db
       .select()
@@ -248,6 +257,7 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
           eq(apartmentsForSale.yearOfConstruction, 2023)
         )
       )
+      .where(eq(apartmentsForSale.validOffer, true))
       .orderBy(desc(apartmentsForSale.price)),
 
     // -------------------------- 2.g) --------------------------
@@ -256,9 +266,9 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
     //TODO: vidi i n a drugim mestima da li dodati is not null
     db.execute<Houses>(sql`Select *
       from (
-        select * from houses_for_sale
+        select * from houses_for_sale where valid_offer = true
         union
-        select * from houses_for_rent
+        select * from houses_for_rent where valid_offer = true
       ) as houses
       where num_of_rooms is not NULL
       order by num_of_rooms desc
@@ -266,9 +276,9 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
     `),
     db.execute<Apartments>(sql`Select *
       from (
-        select * from apartments_for_sale
+        select * from apartments_for_sale where valid_offer = true
         union
-        select * from apartments_for_rent
+        select * from apartments_for_rent where valid_offer = true
       ) as apartments
       where num_of_rooms is not NULL
       order by num_of_rooms desc
@@ -278,9 +288,9 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
     // ▪ najveću kvadraturu (samo za stanove),
     db.execute<Apartments>(sql`Select *
     from (
-      select * from apartments_for_sale
+      select * from apartments_for_sale where valid_offer = true
       union
-      select * from apartments_for_rent
+      select * from apartments_for_rent where valid_offer = true
     ) as apartments
     where size is not NULL
     order by size desc
@@ -289,9 +299,9 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
     // ▪ najveću površinu zemljišta (samo za kuće)
     db.execute<Houses>(sql`Select *
     from (
-      select * from houses_for_sale
+      select * from houses_for_sale where valid_offer = true
       union
-      select * from houses_for_rent
+      select * from houses_for_rent where valid_offer = true
     ) as houses
     where land_surface is not NULL
     order by land_surface desc
@@ -397,13 +407,11 @@ export default function Task2({
                     </thead>
                     <tbody>
                       {numOfPropertiesForSaleCity?.map((row, i) => (
-                        <>
-                          <tr key="row.url">
-                            <th>{i}</th>
-                            <td>{row.city}</td>
-                            <td>{row.count}</td>
-                          </tr>
-                        </>
+                        <tr key={row.city}>
+                          <th>{i}</th>
+                          <td>{row.city}</td>
+                          <td>{row.count}</td>
+                        </tr>
                       ))}
                     </tbody>
                   </table>
