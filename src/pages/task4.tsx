@@ -27,6 +27,23 @@ type Repo = {
   data: ApartmentsForSale[];
 };
 export const getServerSideProps: GetServerSideProps<Repo> = async () => {
+  const cleanup = db
+    .update(apartmentsForSale)
+    .set({ isOutlier: true })
+    .where(
+      or(
+        gt(apartmentsForSale.size, "1000"),
+        lt(apartmentsForSale.size, "15"),
+        gt(apartmentsForSale.numOfRooms, "8"),
+        lt(apartmentsForSale.numOfRooms, "1"),
+        gt(apartmentsForSale.numOfBathrooms, "6"),
+        lt(apartmentsForSale.numOfBathrooms, "1"),
+        lt(apartmentsForSale.price, "15000")
+      )
+    );
+
+  await cleanup;
+
   const loc = ['konjarnik', 'novi beograd', 'mirijevo ii']; // prettier-ignore
   const placeholders = loc.map(() => "?").join(", ");
   // (${placeholders})
@@ -57,24 +74,7 @@ const Task4 = ({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { location } = useContext(Context);
   // data cleanup, outliers
-  // const cleanup = async () => {
-  //   await db
-  //     .update(apartmentsForSale)
-  //     .set({ validOffer: false })
-  //     .where(
-  //       or(
-  //         gt(apartmentsForSale.size, "1000"),
-  //         lt(apartmentsForSale.size, "15"),
-  //         gt(apartmentsForSale.numOfRooms, "8"),
-  //         lt(apartmentsForSale.numOfRooms, "1"),
-  //         gt(apartmentsForSale.numOfBathrooms, "6"),
-  //         lt(apartmentsForSale.numOfBathrooms, "1"),
-  //         lt(apartmentsForSale.price, "15000")
-  //       )
-  //     );
-  // };
 
-  // cleanup();
   // u top pet opstina23643
   console.log(data[0]);
 

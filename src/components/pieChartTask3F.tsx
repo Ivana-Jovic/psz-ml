@@ -44,7 +44,7 @@ function PieChartTask3F({ data }: { data: CountWithString[] }) {
                 textAnchor={x > cx ? "start" : "end"}
                 dominantBaseline="central"
               >
-                {data[index].name} ({value})
+                {data[index]?.name} ({value})
               </text>
             );
           }}
