@@ -13,8 +13,8 @@ export default function Home() {
   const {
     location,
     setLocation,
-    price,
-    setPrice,
+    // price,
+    // setPrice,
     size,
     setSize,
     yearOfConstruction,
@@ -45,7 +45,7 @@ export default function Home() {
   } = useForm<ContextType>({
     defaultValues: {
       location,
-      price,
+      // price,
       size,
       yearOfConstruction,
       floor,
@@ -61,7 +61,7 @@ export default function Home() {
 
   const onSubmit: SubmitHandler<ContextType> = (data) => {
     setLocation(data.location);
-    setPrice(data.price);
+    // setPrice(data.price);
     setSize(data.size);
     setYearOfConstruction(data.yearOfConstruction);
     setFloor(data.floor);
@@ -109,7 +109,7 @@ export default function Home() {
             </div>
           </div>
           <div className="grid grid-cols-3 gap-5">
-            <Input
+            {/* <Input
               {...register("price", {
                 required: true,
                 min: 1,
@@ -118,7 +118,7 @@ export default function Home() {
               label={"Price"}
               type="number"
               min={1}
-            />
+            /> */}
             <Input
               {...register("size", {
                 required: true,
@@ -132,32 +132,33 @@ export default function Home() {
             <Input
               {...register("yearOfConstruction", {
                 required: true,
-                min: 1,
+                min: 0,
                 valueAsNumber: true,
               })}
               label={"yearOfConstruction"}
               type="number"
-              min={1}
+              min={0}
             />
             <Input
               {...register("floor", {
                 required: true,
-                min: 1,
+                min: 0,
                 valueAsNumber: true,
               })}
-              label={"floor or total floors"}
+              label={"floor 0,1,2"}
               type="number"
-              min={1}
+              min={0}
+              max={2}
             />
             <Input
               {...register("numOfBathrooms", {
                 required: true,
-                min: 1,
+                min: 0,
                 valueAsNumber: true,
               })}
               label={"numOfBathrooms"}
               type="number"
-              min={1}
+              min={0}
             />
             <Input
               {...register("numOfRooms", {
@@ -175,7 +176,7 @@ export default function Home() {
                 className="checkbox"
                 {...register("registered", {})}
               />
-              Registered+ grejanje
+              Registered
             </div>
             <div className="flex items-center gap-3">
               <input

@@ -1,82 +1,103 @@
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
-import { Pool } from "@neondatabase/serverless";
-import { drizzle } from "drizzle-orm/neon-serverless";
 import { sql, eq, desc, or, and, isNull, gt, lt, inArray } from "drizzle-orm";
-import { housesForRent, HousesForRent } from "@/db/schema/housesForRent";
-import { housesForSale, HousesForSale } from "@/db/schema/housesForSale";
 import {
   apartmentsForSale,
   ApartmentsForSale,
 } from "@/db/schema/apartmentsForSale";
-import {
-  apartmentsForRent,
-  ApartmentsForRent,
-} from "@/db/schema/apartmentsForRent";
+
 import Link from "next/link";
 import { db } from "@/db/drizzle";
-import { top5locations } from "@/top5Locations";
 import Input from "../components/Input";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Context } from "@/context";
+import { top5locations } from "@/top5Locations";
+import { Theta } from "@/db/schema/theta";
+// import { Row,  } from "@/arrangeData";
+import { Row, deNormalize, getAndArrangeData } from "@/arrangeData";
 
-//todo check if uopste valid
-// todo dodaj valid offer polje
-// todo sredjivanje podataka, outlieri featur
 type Repo = {
-  data: ApartmentsForSale[];
+  avg: any[];
 };
 export const getServerSideProps: GetServerSideProps<Repo> = async () => {
-  const cleanup = db
-    .update(apartmentsForSale)
-    .set({ isOutlier: true })
-    .where(
-      or(
-        gt(apartmentsForSale.size, "1000"),
-        lt(apartmentsForSale.size, "15"),
-        gt(apartmentsForSale.numOfRooms, "8"),
-        lt(apartmentsForSale.numOfRooms, "1"),
-        gt(apartmentsForSale.numOfBathrooms, "6"),
-        lt(apartmentsForSale.numOfBathrooms, "1"),
-        lt(apartmentsForSale.price, "15000")
-      )
-    );
-
-  await cleanup;
-
-  const loc = ['konjarnik', 'novi beograd', 'mirijevo ii']; // prettier-ignore
-  const placeholders = loc.map(() => "?").join(", ");
-  // (${placeholders})
-  //   const data = await db.execute<ApartmentsForSale>(sql`Select *
-  //   from  apartments_for_sale
-  //   where valid_offer = true and SPLIT_PART(location, ', ', 2) in (${loc})
-  //   limit 10
-  // `);
   const locNew = top5locations.map(
-    (location) => "beograd, " + location.toLowerCase()
+    (location: string) => "beograd, " + location.toLowerCase()
   );
-  // console.log(locNew);
-  const data = await db
-    .select()
+  const data: any[] = await db
+    .select({
+      avgBath: sql<number>`avg(num_of_bathrooms)`,
+      avgYear: sql<number>`avg(year_of_construction)`,
+      minPrice: sql<number>`min(price)`,
+      maxPrice: sql<number>`max(price)`,
+      minSize: sql<number>`min(size)`,
+      maxSize: sql<number>`max(size)`,
+      minRooms: sql<number>`min(num_of_rooms)`,
+      maxRooms: sql<number>`max(num_of_rooms)`,
+      minBath: sql<number>`min(num_of_bathrooms)`,
+      maxBath: sql<number>`max(num_of_bathrooms)`,
+      minYear: sql<number>`min(year_of_construction)`,
+      maxYear: sql<number>`max(year_of_construction)`,
+    })
     .from(apartmentsForSale)
     .where(
       and(
-        eq(apartmentsForSale.validOffer, true),
+        eq(apartmentsForSale.isOutlier, false),
         inArray(apartmentsForSale.location, locNew)
-        // sql.raw(`split_part(location, ', ', 2) in (${loc})`)
       )
     );
 
-  return { props: { data: data } };
+  return { props: { avg: data } };
 };
 const Task4 = ({
-  data,
+  avg,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { location } = useContext(Context);
-  // data cleanup, outliers
+  const props = useContext(Context);
 
-  // u top pet opstina23643
-  console.log(data[0]);
+  const arrange = async (theta: Theta[]) => {
+    const tmpData = await getAndArrangeData(props, avg);
+    console.log("tmpData", props, theta[0], tmpData);
+    const pred =
+      +(theta[0].thetaZero ?? 0) +
+      +(theta[0].size ?? 0) * tmpData["size"] +
+      +(theta[0].location ?? 0) * tmpData["location"] +
+      +(theta[0].yearOfConstruction ?? 0) * tmpData["yearOfConstruction"] +
+      +(theta[0].floor ?? 0) * tmpData["floor"] +
+      +(theta[0].numOfBathrooms ?? 0) * tmpData["numOfBathrooms"] +
+      +(theta[0].numOfRooms ?? 0) * tmpData["numOfRooms"] +
+      +(theta[0].registered ?? 0) * tmpData["registered"] +
+      +(theta[0].elevator ?? 0) * tmpData["elevator"] +
+      +(theta[0].terrace ?? 0) * tmpData["terrace"] +
+      +(theta[0].parking ?? 0) * tmpData["parking"] +
+      +(theta[0].garage ?? 0) * tmpData["garage"];
+
+    const denormPrediction = deNormalize(
+      pred,
+      +avg[0].minPrice,
+      +avg[0].maxPrice
+    );
+    setPrediction(denormPrediction);
+  };
+
+  const [data, setData] = useState<Theta[]>([]);
+  const [dataArranged, setDataArranged] = useState<Row>();
+  const [prediction, setPrediction] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/getTheta"); // Replace with your actual endpoint URL
+        const result = await response.json();
+        setData(result.data);
+
+        //
+        await arrange(result.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
@@ -84,7 +105,8 @@ const Task4 = ({
         <Link href={"/"} className="btn">
           Go to home
         </Link>
-        {location}
+        {/* {data[0]?.thetaZero}-{dataArranged?.size} */}
+        -- {prediction}
       </div>
     </main>
   );

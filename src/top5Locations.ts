@@ -1,8 +1,8 @@
 export const top5locations = [
-  '29. Novembra', //ok
+  '29. Novembra', //okk
   //   'Ada Ciganlija',
   //   'Altina',
-  'Andrićev venac', //ok
+  'Andrićev venac', //okk
   //   'Voždovac (sve podlokacije)',
   'Autokomanda', //ok
   //   'Avala',
@@ -13,8 +13,8 @@ export const top5locations = [
   //   'Dušanovac',
   //   'Farmaceutski fakultet',
   //   'Jajinci',
-  'Konjarnik', //ok
-  'Lekino brdo', //ok
+  'Konjarnik', //okk
+  'Lekino brdo', //okk
   //   'Marinkova bara',
   //   'Pašino brdo',
   //   'Stepa Stepanović',
@@ -24,25 +24,25 @@ export const top5locations = [
   //   'Veljko Vlahović',
   //   'Voždovac',
   //   'Autoput',
-  'Bajlonijeva pijaca', //ok
+  'Bajlonijeva pijaca', //okk
   'Banija', //ok
   //   'Banovo brdo',
   //   'Barajevo',
   //   'Batajnica',
   //   'Belaci',
   //   'Bele vode',
-  'Beograd na vodi', //ok
+  'Beograd na vodi', //okk
   //   'Centar (sve podlokacije)', //ok
-  'Centar', //ok
-  'Beograđanka ( centar )', //ok
-  'Centar (uži)', //ok
-  'Knez Mihajlova ( centar )', //ok
-  'Kneza Miloša ( centar )',
-  'Politika ( centar )', //ok
-  'Stari Grad', //ok
-  'Studentski Trg ( centar )', //ok
-  'Terazije ( centar )', //ok
-  'Trg Republike ( centar )', //ok
+  'Centar', //okk
+  'Beograđanka ( centar )', //okk
+  'Centar (uži)', //okk
+  'Knez Mihajlova ( centar )', //okk
+  'Kneza Miloša ( centar )',//okk
+  'Politika ( centar )', //okk
+  'Stari Grad', //okk
+  'Studentski Trg ( centar )', //okk
+  'Terazije ( centar )', //okk
+  'Trg Republike ( centar )', //okk
   'Bežanija', //ok
   //   'Bežanijska kosa (sve podlokacije)', //ok
   'Bežanijska kosa', //ok
@@ -79,58 +79,58 @@ export const top5locations = [
   //   'Brzi Brod',
   //   'Zvezdara (sve podlokacije)', //ok
   'Zvezdara', //ok
-  'Bulbuder', //ok
-  'Bulevar Kr. Aleksandra', //ok
-  'Cvetanova ćuprija', //ok
-  'Cvetkova pijaca', //ok
-  'Denkova bašta', //ok
-  'Đeram pijaca', //ok
-  'Gradska bolnica', //ok
+  'Bulbuder', //okk
+  'Bulevar Kr. Aleksandra', //okk
+  'Cvetanova ćuprija', //okk
+  'Cvetkova pijaca', //okk
+  'Denkova bašta', //okk
+  'Đeram pijaca', //okk
+  'Gradska bolnica', //okk
   //   'Kluz',
-  'Lion', //ok
-  'Lipov lad', //ok
-  'Mali mokri lug', //ok
-  'Novo groblje', //ok
-  'Olimp', //ok
-  'Rudo', //ok
-  'Severni bulevar', //ok
-  'Slavujev venac', //ok
+  'Lion', //okk
+  'Lipov lad', //okk
+  'Mali mokri lug', //okk
+  'Novo groblje', //okk
+  'Olimp', //okk
+  'Rudo', //okk
+  'Severni bulevar', //okk
+  'Slavujev venac', //okk
   //   'Smederevski put',
-  'Učiteljsko naselje', //ok
-  'Veliki mokri lug', //ok
-  'Vukov spomenik', //ok
-  'Zeleno Brdo', //ok
-  'Zira', //ok
-  'Zvezdara', //ok
-  'Zvezdarska Šuma', //ok
+  'Učiteljsko naselje', //okk
+  'Veliki mokri lug', //okk
+  'Vukov spomenik', //okk
+  'Zeleno Brdo', //okk
+  'Zira', //okk
+  // 'Zvezdara', //okk
+  'Zvezdarska Šuma', //okk
   //   'Cerak vinogradi',
   //   'Cerak',
   //   'Cerski venac',
   //   'Vračar (sve podlokacije)', //ok
-  'Vračar', //ok
+  'Vračar', //okk
   //   'Crveni krst',
-  'Čubura', //ok
-  'Cvetni trg', //ok
+  'Čubura', //okk
+  'Cvetni trg', //okk
   'Gradic Pejton',
-  'Južni bulevar', //ok
-  'Kalenić pijaca',
-  'Neimar',
-  'Slavija',
-  'Vračar (Centar)', //ok
-  'Vračar (Hram)', //ok
+  'Južni bulevar', //okk
+  'Kalenić pijaca',//okk
+  'Neimar',//okk
+  'Slavija',//okk
+  'Vračar (Centar)', //okk
+  'Vračar (Hram)', //okk
   'Čukarica',
   'Čukarička padina',
   //   'Dedinje (sve podlokacije)', //ok'
   'Dedinje', //ok
-  'Dedinje (25. maj)', //ok
-  'Dedinje (Beli dvor)', //ok
-  'Dedinje (RTV Pink)', //ok
+  'Dedinje (25. maj)', //okk
+  'Dedinje (Beli dvor)', //okk
+  'Dedinje (RTV Pink)', //okk
   'Dobanovci',
   //   'Dorćol (sve podlokacije)', //ok
   'Dorćol', //ok
-  'Donji Dorćol', //ok
-  'Dunavski kej',
-  'Gornji Dorćol', //ok
+  'Donji Dorćol', //okk
+  'Dunavski kej',//okk
+  'Gornji Dorćol', //okk
   'Strahinjića Bana', //ok
   //   'Filmski grad',
   //   'Galenika',
@@ -138,7 +138,7 @@ export const top5locations = [
   //   'Golf naselje',
   //   'Greda',
   //   'Grocka',
-  'Gundulićev venac', //ok
+  'Gundulićev venac', //okk
   //   'Hipodrom',
   //   'Ibarska magistrala',
   //   'Industrijska zona jug',
@@ -147,15 +147,15 @@ export const top5locations = [
   //   'Jelovac',
   //   'Julino brdo',
   'Kablar', //ok
-  'Kalemegdan', //ok
+  'Kalemegdan', //okk
   //   'Kaluđerica',
   //   'Kanarevo brdo',
   //   'Karađorđeva',
   //   'Kijevo',
-  'Klinički centar', //ok
+  'Klinički centar', //okk
   //   'Kneževac',
-  'Kopitareva gradina', //ok
-  'Kosančićev venac', //ok
+  'Kopitareva gradina', //okk
+  'Kosančićev venac', //okk
   //   'Košutnjak',
   //   'Kumodraž (sve podlokacije)',
   //   'Kumodraž I',
@@ -256,12 +256,12 @@ export const top5locations = [
   'Novi Beograd Blok 8a (Paviljoni)',
   'Novi Beograd Blok 9',
   'Novi Beograd Blok 9a (Dom Zdravlja)',
-  'Obilićev venac', //ok
+  'Obilićev venac', //okk
   //   'Orlovača',
   //   'Ostružnica',
-  'Palata pravde', //ok
+  'Palata pravde', //okk
   //   'Pančevački most',
-  'Partizanov stadion', //ok
+  'Partizanov stadion', //okk
   //   'Petlovo brdo',
   'Pionirski park', //ok
   //   'Plavi Horizonti',
@@ -272,12 +272,12 @@ export const top5locations = [
   //   'Retenzija',
   //   'Reva',
   //   'Rušanj',
-  'Sarajevska', //ok
-  'Sava mala', //ok
-  'Savski trg', //ok
-  'Savski venac', //ok
-  'Senjak', //ok
-  'Skadarlija', //ok
+  'Sarajevska', //okk
+  'Sava mala', //okk
+  'Savski trg', //okk
+  'Savski venac', //okk
+  'Senjak', //okk
+  'Skadarlija', //okk
   //   'Skojevsko naselje',
   //   'Sopot',
   //   'Sremčica',
@@ -285,7 +285,7 @@ export const top5locations = [
   //   'Sunčani breg',
   //   'Surčin',
   //   'Tehnicki fakulteti',
-  'Topčider', //ok
+  'Topčider', //okk
   'Topličin venac', //ok
   'Tošin bunar', //ok
   //   'Trešnja',
@@ -295,7 +295,7 @@ export const top5locations = [
   //   'Vinča',
   //   'Vojvode Vlahovića',
   //   'Žarkovo',
-  'Zeleni venac', //ok
+  'Zeleni venac', //okk
   //   'Železnik',
   //   'Zemun (sve podlokacije)',
   //   'Zemun (13. maj)',
@@ -316,5 +316,5 @@ export const top5locations = [
   //   'Zemun (Sutjeska)',
   //   'Zemun (Teleoptik)',
   //   'Zemun Polje',
-  'Zvezdin stadion', //ok
+  'Zvezdin stadion', //okk
 ]; // prettier-ignore

@@ -1,4 +1,5 @@
 import React, { Dispatch, createContext, useEffect, useState } from "react";
+
 type ProviderProps = {
   children?: React.ReactNode;
 };
@@ -6,8 +7,8 @@ type ProviderProps = {
 export interface ContextType {
   location: string;
   setLocation: Dispatch<React.SetStateAction<string>>;
-  price: number;
-  setPrice: Dispatch<React.SetStateAction<number>>;
+  // price: number;
+  // setPrice: Dispatch<React.SetStateAction<number>>;
   size: number;
   setSize: Dispatch<React.SetStateAction<number>>;
   yearOfConstruction: number;
@@ -33,17 +34,17 @@ export interface ContextType {
 export const Context = createContext<ContextType>({
   location: "",
   setLocation: () => {},
-  price: 0,
-  setPrice: () => {},
-  size: 0,
+  // price: 100000,
+  // setPrice: () => {},
+  size: 50,
   setSize: () => {},
-  yearOfConstruction: 0,
+  yearOfConstruction: 2000,
   setYearOfConstruction: () => {},
   floor: 0,
   setFloor: () => {},
-  numOfBathrooms: 0,
+  numOfBathrooms: 1,
   setNumOfBathrooms: () => {},
-  numOfRooms: 0,
+  numOfRooms: 1,
   setNumOfRooms: () => {},
   registered: false,
   setRegistered: () => {},
@@ -59,12 +60,12 @@ export const Context = createContext<ContextType>({
 
 export const Provider = ({ children }: ProviderProps) => {
   const [location, setLocation] = useState<string>("");
-  const [price, setPrice] = useState<number>(0);
-  const [size, setSize] = useState<number>(0);
+  // const [price, setPrice] = useState<number>(100000);
+  const [size, setSize] = useState<number>(50);
   const [yearOfConstruction, setYearOfConstruction] = useState<number>(0);
   const [floor, setFloor] = useState<number>(0);
   const [numOfBathrooms, setNumOfBathrooms] = useState<number>(0);
-  const [numOfRooms, setNumOfRooms] = useState<number>(0);
+  const [numOfRooms, setNumOfRooms] = useState<number>(1);
   const [registered, setRegistered] = useState<boolean>(false);
   const [elevator, setElevator] = useState<boolean>(false);
   const [terrace, setTerrace] = useState<boolean>(false);
@@ -74,8 +75,8 @@ export const Provider = ({ children }: ProviderProps) => {
   const u: ContextType = {
     location,
     setLocation,
-    price,
-    setPrice,
+    // price,
+    // setPrice,
     size,
     setSize,
     yearOfConstruction,
