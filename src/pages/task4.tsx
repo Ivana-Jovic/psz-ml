@@ -4,7 +4,6 @@ import {
   apartmentsForSale,
   ApartmentsForSale,
 } from "@/db/schema/apartmentsForSale";
-
 import Link from "next/link";
 import { db } from "@/db/drizzle";
 import Input from "../components/Input";
@@ -13,12 +12,12 @@ import { useContext, useEffect, useState } from "react";
 import { Context } from "@/context";
 import { top5locations } from "@/top5Locations";
 import { Theta } from "@/db/schema/theta";
-// import { Row,  } from "@/arrangeData";
 import { Row, deNormalize, getAndArrangeData } from "@/arrangeData";
 
 type Repo = {
   avg: any[];
 };
+
 export const getServerSideProps: GetServerSideProps<Repo> = async () => {
   const locNew = top5locations.map(
     (location: string) => "beograd, " + location.toLowerCase()
@@ -75,11 +74,11 @@ const Task4 = ({
       +avg[0].minPrice,
       +avg[0].maxPrice
     );
+
     setPrediction(denormPrediction);
   };
 
   const [data, setData] = useState<Theta[]>([]);
-  const [dataArranged, setDataArranged] = useState<Row>();
   const [prediction, setPrediction] = useState<number>(0);
 
   useEffect(() => {
@@ -106,7 +105,7 @@ const Task4 = ({
           Go to home
         </Link>
         {/* {data[0]?.thetaZero}-{dataArranged?.size} */}
-        -- {prediction}
+        {prediction}
       </div>
     </main>
   );

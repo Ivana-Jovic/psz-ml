@@ -221,9 +221,14 @@ export default function Home() {
           </div>
         </form>
         {formSubmitted && (
-          <Link href={"/task4"} className="btn">
-            Go to task4
-          </Link>
+          <>
+            <Link href={"/task4"} className="btn">
+              Go to task4
+            </Link>
+            <Link href={"/task5"} className="btn">
+              Go to task5
+            </Link>
+          </>
         )}
       </div>
     </main>

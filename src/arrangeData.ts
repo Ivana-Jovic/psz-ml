@@ -26,11 +26,11 @@ export type Row = {
   garage: number;
 };
 
-const boolToNumber = (bool: boolean | null) => {
+export const boolToNumber = (bool: boolean | null) => {
   return bool ? +bool : 0;
 };
 
-const normalize = (val: number, min: number, max: number) => {
+export const normalize = (val: number, min: number, max: number) => {
   return (val - +min) / (+max - +min);
 };
 
@@ -38,7 +38,7 @@ export const deNormalize = (norm: number, min: number, max: number) => {
   return norm * (+max - +min) + +min;
 };
 
-const normalizeLocation = (val: number) => {
+export const normalizeLocation = (val: number) => {
   const values = Object.values(distances);
   const maxValue = Math.max(...values);
   const minValue = Math.min(...values);
