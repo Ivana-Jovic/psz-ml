@@ -228,6 +228,9 @@ export default function Home() {
             <Link href={"/task5"} className="btn">
               Go to task5
             </Link>
+            <Link href={"/task6"} className="btn">
+              Go to task6
+            </Link>
           </>
         )}
       </div>

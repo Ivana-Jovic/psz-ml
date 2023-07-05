@@ -1,8 +1,3 @@
-// import { sql, eq, desc, or, and, isNull, gt, lt, inArray } from "drizzle-orm";
-// import { apartmentsForSale } from "./db/schema/apartmentsForSale";
-// import { db } from "./db/drizzle";
-// import { top5locations } from "./top5Locations";
-// import { distances } from "./distances";
 import { ContextType } from "./context";
 
 import { sql, eq, desc, or, and, isNull, gt, lt, inArray } from "drizzle-orm";
@@ -77,6 +72,5 @@ export const getAndArrangeData = async (row: ContextType, avg: any[]) => {
     yearOfConstruction: normalize(year, +avg[0].minYear, +avg[0].maxYear),
   };
 
-  // console.log(newRow);
   return newRow;
 };

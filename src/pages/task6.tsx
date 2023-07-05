@@ -10,6 +10,7 @@ import { useContext, useEffect, useState } from "react";
 import { Context, ContextType } from "@/context";
 import { top5locations } from "@/top5Locations";
 import {
+  Row,
   boolToNumber,
   deNormalize,
   getAndArrangeData,
@@ -17,6 +18,7 @@ import {
   normalizeLocation,
 } from "@/arrangeData";
 import { distances } from "@/distances";
+import { euclideanDistance, floorTmp } from "./task5";
 
 export type RangeCount = {
   range: string;
@@ -39,142 +41,89 @@ export type RowWithPrice = {
   garage: number;
 };
 
-export function euclideanDistance(
-  point1: RowWithPrice,
-  point2: Omit<RowWithPrice, "price">
-): number {
-  if (point1.length !== point2.length) {
-    throw new Error("Points have different dimensions");
+class Cluster {
+  centroid: RowWithPrice;
+  points: RowWithPrice[];
+
+  constructor(centroid: RowWithPrice) {
+    this.centroid = centroid;
+    this.points = [];
   }
 
-  let sum = 0;
-  sum += Math.pow(point1["size"] - point2["size"], 2);
-  sum += Math.pow(point1["location"] - point2["location"], 2);
-  sum += Math.pow(
-    point1["yearOfConstruction"] - point2["yearOfConstruction"],
-    2
-  );
-  sum += Math.pow(point1["floor"] - point2["floor"], 2);
-  sum += Math.pow(point1["numOfBathrooms"] - point2["numOfBathrooms"], 2);
-  sum += Math.pow(point1["numOfRooms"] - point2["numOfRooms"], 2);
-  sum += Math.pow(point1["registered"] - point2["registered"], 2);
-  sum += Math.pow(point1["elevator"] - point2["elevator"], 2);
-  sum += Math.pow(point1["terrace"] - point2["terrace"], 2);
-  sum += Math.pow(point1["parking"] - point2["parking"], 2);
-  sum += Math.pow(point1["garage"] - point2["garage"], 2);
-  // console.log(" Math.sqrt(sum)", Math.sqrt(sum));
-  return Math.sqrt(sum);
-}
-
-function manhattanDistance(
-  point1: RowWithPrice,
-  point2: Omit<RowWithPrice, "price">
-): number {
-  let sum = 0;
-  sum += Math.abs(point1["size"] - point2["size"]);
-  sum += Math.abs(point1["location"] - point2["location"]);
-  sum += Math.abs(point1["yearOfConstruction"] - point2["yearOfConstruction"]);
-  sum += Math.abs(point1["floor"] - point2["floor"]);
-  sum += Math.abs(point1["numOfBathrooms"] - point2["numOfBathrooms"]);
-  sum += Math.abs(point1["numOfRooms"] - point2["numOfRooms"]);
-  sum += Math.abs(point1["registered"] - point2["registered"]);
-  sum += Math.abs(point1["elevator"] - point2["elevator"]);
-  sum += Math.abs(point1["terrace"] - point2["terrace"]);
-  sum += Math.abs(point1["parking"] - point2["parking"]);
-  sum += Math.abs(point1["garage"] - point2["garage"]);
-  return sum;
-}
-
-export function getKNearestNeighbors(
-  data: RowWithPrice[],
-  queryPoint: Omit<RowWithPrice, "price">,
-  k: number,
-  isEuklidian?: boolean
-) {
-  const distances = data.map((row) => ({
-    point: row,
-    distance: isEuklidian
-      ? euclideanDistance(row, queryPoint)
-      : manhattanDistance(row, queryPoint),
-  }));
-  console.log("data.length", data.length);
-  distances.sort((a, b) => a.distance - b.distance);
-
-  return distances.slice(0, k).map((distance) => distance.point);
-}
-
-export const floorTmp = (floor: number | null, totalFloors: number | null) => {
-  if (floor && totalFloors) {
-    if (floor === 0) return 0;
-    if (floor === totalFloors) return 2;
+  clear(): void {
+    this.points = [];
   }
-  return 1;
-};
 
-const getCategoryPrice = (price: number): number => {
-  switch (true) {
-    case price < 100000:
-      return 0;
-    case price < 140000:
-      return 1;
-    case price < 200000:
-      return 2;
-    case price < 300000:
-      return 3;
-    default:
-      return 4;
+  addPoint(point: RowWithPrice): void {
+    this.points.push(point);
   }
-};
 
-function findMostFrequentCategory(data: RowWithPrice[], avg: any[]): number {
-  const categoryCounts: Record<number, number> = {}; // Object to store category counts
-
-  // Count the occurrences of each category
-  data.forEach((item) => {
-    const denormPrice =
-      //  item.price;
-      deNormalize(item.price, +avg[0].minPrice, +avg[0].maxPrice);
-    const category = getCategoryPrice(denormPrice);
-    if (categoryCounts[category]) {
-      categoryCounts[category] += 1;
-    } else {
-      categoryCounts[category] = 1;
+  calculateCentroid(): void {
+    if (this.points.length === 0) {
+      return;
     }
-  });
 
-  // Find the category with the highest count
-  let mostFrequentCategory = -1; // Default value for category
-  let highestCount = 0;
+    let sumX = 0;
+    let sumY = 0;
 
-  for (const category in categoryCounts) {
-    if (categoryCounts[category] > highestCount) {
-      highestCount = categoryCounts[category];
-      mostFrequentCategory = Number(category);
+    for (const point of this.points) {
+      sumX += point.x;
+      sumY += point.y;
     }
+    let sumFields: RowWithPrice = {
+      size: 0,
+      location: 0,
+      price: 0,
+      yearOfConstruction: 0,
+      floor: 0,
+      numOfBathrooms: 0,
+      numOfRooms: 0,
+      registered: 0,
+      elevator: 0,
+      terrace: 0,
+      parking: 0,
+      garage: 0,
+    };
+
+    this.points.forEach((point) => {
+      sumFields.size += point.size;
+      sumFields.location += point.location;
+      sumFields.price += point.price;
+      sumFields.yearOfConstruction += point.yearOfConstruction;
+      sumFields.floor += point.floor;
+      sumFields.numOfBathrooms += point.numOfBathrooms;
+      sumFields.numOfRooms += point.numOfRooms;
+      sumFields.registered += point.registered;
+      sumFields.elevator += point.elevator;
+      sumFields.terrace += point.terrace;
+      sumFields.parking += point.parking;
+      sumFields.garage += point.garage;
+    });
+
+    this.centroid = {
+      size: sumFields.size / this.points.length,
+      location: sumFields.location / this.points.length,
+      price: sumFields.price / this.points.length,
+      yearOfConstruction: sumFields.yearOfConstruction / this.points.length,
+      floor: sumFields.floor / this.points.length,
+      numOfBathrooms: sumFields.numOfBathrooms / this.points.length,
+      numOfRooms: sumFields.numOfRooms / this.points.length,
+      registered: sumFields.registered / this.points.length,
+      elevator: sumFields.elevator / this.points.length,
+      terrace: sumFields.terrace / this.points.length,
+      parking: sumFields.parking / this.points.length,
+      garage: sumFields.garage / this.points.length,
+    };
   }
-
-  return mostFrequentCategory;
 }
 
-function findAvgPrice(data: RowWithPrice[], avg: any[]): number {
-  const total = data.reduce(
-    (sum, item) =>
-      sum +
-      // item.price,
-      deNormalize(item.price, +avg[0].minPrice, +avg[0].maxPrice),
-    0
-  );
-  const average = total / data.length;
-  return average;
-}
-
-export const doKnn = async (
+const dataTransform = async (
   allData: ApartmentsForSale[],
   testData: ContextType,
   avgg: any[],
   k: number,
   isEuklidian?: boolean
-) => {
+): Promise<[RowWithPrice[], Row]> => {
   // normalize table
   const data: ApartmentsForSale[] = allData;
   const avg = avgg;
@@ -222,14 +171,101 @@ export const doKnn = async (
   const tmpData = await getAndArrangeData(testData, avg);
   ////
 
-  const kk = k === 0 ? Math.sqrt(newData.length) : k;
-  console.log("USING:", kk, isEuklidian);
-  const knn = getKNearestNeighbors(newData, tmpData, kk, isEuklidian);
+  return [newData, tmpData];
+};
+const kMeans = async (
+  allData: ApartmentsForSale[],
+  testData: ContextType,
+  avgg: any[],
+  k: number,
+  isEuklidian?: boolean
+) => {
+  const maxIterations = 100;
 
-  console.log("knn", testData, tmpData, knn);
-  const fq = findMostFrequentCategory(knn, avgg);
-  console.log("findAvgPrice", findAvgPrice(knn, avgg));
-  return fq;
+  const [newData, tmpData] = await dataTransform(
+    allData,
+    testData,
+    avgg,
+    k,
+    isEuklidian
+  );
+  const kk = k === 0 ? Math.sqrt(newData.length) : k;
+  // const knn = getKNearestNeighbors(newData, tmpData, kk, isEuklidian);
+
+  // Initialize clusters with random centroids
+  const clusters: Cluster[] = [];
+  for (let i = 0; i < kk; i++) {
+    const randomIndex = Math.floor(Math.random() * newData.length);
+    const randomPoint = newData[randomIndex];
+    const cluster = new Cluster(randomPoint);
+    // console.log("clusters.push(cluster)", randomIndex, randomPoint, cluster);
+    clusters.push(cluster);
+  }
+
+  let iterations = 0;
+
+  while (iterations < maxIterations) {
+    // Clear points from previous iteration
+    for (const cluster of clusters) {
+      cluster.clear();
+    }
+
+    // Assign each point to the nearest cluster
+    for (const point of newData) {
+      let minDistance = Infinity;
+      let nearestCluster: Cluster | undefined;
+
+      for (const cluster of clusters) {
+        const distance = euclideanDistance(point, cluster.centroid);
+        if (distance < minDistance) {
+          minDistance = distance;
+          nearestCluster = cluster;
+        }
+      }
+
+      if (nearestCluster) {
+        nearestCluster.addPoint(point);
+      }
+    }
+
+    // Update centroids of each cluster
+    for (const cluster of clusters) {
+      cluster.calculateCentroid();
+    }
+    // console.log("clusters", clusters);
+    iterations++;
+  }
+  ////
+
+  const distinctCentroids = new Set<RowWithPrice>();
+
+  // Iterate over the data array and add centroid values to the Set
+  clusters.forEach((obj) => {
+    distinctCentroids.add(obj.centroid);
+  });
+
+  let closestCentroid: RowWithPrice | null =
+    clusters && clusters.length > 0 ? clusters[0].centroid : null;
+  let minDistance = Infinity;
+
+  distinctCentroids.forEach((centroid) => {
+    // console.log(centroid);
+    const distance = euclideanDistance(centroid, tmpData);
+    if (distance < minDistance) {
+      minDistance = distance;
+      closestCentroid = centroid;
+    }
+  });
+
+  const prediction = closestCentroid?.price ?? 0;
+  const denromalizedPrd = deNormalize(
+    prediction,
+    +avgg[0].minPrice,
+    +avgg[0].maxPrice
+  );
+  ///
+  // return clusters;
+  return denromalizedPrd;
 };
 
 type Repo = {
@@ -276,7 +312,7 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
 
   return { props: { avg: data, allData: dataAll } };
 };
-const Task5 = ({
+const Task6 = ({
   avg,
   allData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
@@ -288,7 +324,7 @@ const Task5 = ({
   const [isEuklidianValue, setIsEuklidianValue] = useState<boolean>(true);
 
   const k = () => {
-    doKnn(allData, props, avg, kValue, isEuklidianValue).then((res) =>
+    kMeans(allData, props, avg, kValue, isEuklidianValue).then((res) =>
       setPrediction(res)
     );
   };
@@ -298,8 +334,8 @@ const Task5 = ({
         <Link href={"/"} className="btn">
           Go to home
         </Link>
-        {/* {prediction} */}
-        {prediction === 0 && <div> less than 100 000 RSD</div>}
+        {prediction.toFixed(0)}&nbsp;RSD
+        {/* {prediction === 0 && <div> less than 100 000 RSD</div>}
         {prediction === 1 && <div> between 100 000 and 140 000 RSD</div>}
         {prediction === 2 && <div> between 140 000 and 200 000 RSD</div>}
         {prediction === 3 && <div> etween 200 000 and 300 000 RSD</div>}
@@ -331,14 +367,14 @@ const Task5 = ({
               />
             </div>
           </div>
-        </div>
+        </div> */}
         {/* -{kValue}-{isEuklidianValue ? "true" : "false"} */}
         <button className="btn mt-5" onClick={k}>
-          Start Knn
+          Start K means
         </button>
       </div>
     </main>
   );
 };
 
-export default Task5;
+export default Task6;

@@ -1,13 +1,8 @@
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 import { sql, eq, desc, or, and, isNull, gt, lt, inArray } from "drizzle-orm";
-import {
-  apartmentsForSale,
-  ApartmentsForSale,
-} from "@/db/schema/apartmentsForSale";
+import { apartmentsForSale } from "@/db/schema/apartmentsForSale";
 import Link from "next/link";
 import { db } from "@/db/drizzle";
-import Input from "../components/Input";
-import { SubmitHandler, useForm } from "react-hook-form";
 import { useContext, useEffect, useState } from "react";
 import { Context } from "@/context";
 import { top5locations } from "@/top5Locations";
