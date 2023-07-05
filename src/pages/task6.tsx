@@ -63,13 +63,13 @@ class Cluster {
       return;
     }
 
-    let sumX = 0;
-    let sumY = 0;
+    // let sumX = 0;
+    // let sumY = 0;
 
-    for (const point of this.points) {
-      sumX += point.x;
-      sumY += point.y;
-    }
+    // for (const point of this.points) {
+    //   sumX += point.x;
+    //   sumY += point.y;
+    // }
     let sumFields: RowWithPrice = {
       size: 0,
       location: 0,
@@ -173,6 +173,38 @@ const dataTransform = async (
 
   return [newData, tmpData];
 };
+
+function areCentroidsEqual(
+  centroid1: RowWithPrice,
+  centroid2: RowWithPrice
+): boolean {
+  // if (centroid1.length !== centroid2.length) {
+  //   return false;
+  // }
+
+  // for (let i = 0; i < centroid1.length; i++) {
+  //   if (centroid1[i] !== centroid2[i]) {
+  //     return false;
+  //   }
+  // }
+  if (
+    centroid1.price === centroid2.price &&
+    centroid1.size === centroid2.size &&
+    centroid1.location === centroid2.location &&
+    centroid1.floor === centroid2.floor &&
+    centroid1.numOfBathrooms === centroid2.numOfBathrooms &&
+    centroid1.numOfRooms === centroid2.numOfRooms &&
+    centroid1.registered === centroid2.registered &&
+    centroid1.elevator === centroid2.elevator &&
+    centroid1.terrace === centroid2.terrace &&
+    centroid1.parking === centroid2.parking &&
+    centroid1.garage === centroid2.garage &&
+    centroid1.yearOfConstruction === centroid2.yearOfConstruction
+  )
+    return true;
+  else return false;
+}
+
 const kMeans = async (
   allData: ApartmentsForSale[],
   testData: ContextType,
@@ -180,7 +212,7 @@ const kMeans = async (
   k: number,
   isEuklidian?: boolean
 ) => {
-  const maxIterations = 100;
+  const maxIterations = 40;
 
   const [newData, tmpData] = await dataTransform(
     allData,
@@ -227,45 +259,79 @@ const kMeans = async (
         nearestCluster.addPoint(point);
       }
     }
-
+    ///
+    const old = new Array(...clusters);
+    ///
     // Update centroids of each cluster
     for (const cluster of clusters) {
-      cluster.calculateCentroid();
+      if (iterations > 1 && cluster.points.length === 0) {
+        const randomIndex = Math.floor(Math.random() * newData.length);
+        cluster.centroid = newData[randomIndex];
+        console.log("NEW CENTROID");
+      } else cluster.calculateCentroid();
     }
     // console.log("clusters", clusters);
     iterations++;
+    ////
+    // const converged = newCentroids.every((centroid, index) =>
+    // centroid.every(
+    //   (feature, innerIndex) =>
+    //     Math.abs(feature - (this.centroids?.[index][innerIndex] ?? 0)) <
+    //     0.0001
+    // )
+    // )
+    // if (iterations > 1) {
+    //   if (
+    //     clusters.every(
+    //       (element, index) =>
+    //         areCentroidsEqual(element.centroid, old[index].centroid)
+
+    //       // clusters.every(
+    //       //   (element, index) =>
+    //       //     JSON.stringify(element.centroid) ===
+    //       //     JSON.stringify(old[index].centroid)
+    //     )
+    //   ) {
+    //     console.log("Konvergira", iterations);
+    //     break;
+    //   }
+    // }
   }
   ////
 
-  const distinctCentroids = new Set<RowWithPrice>();
+  // const distinctCentroids = new Set<RowWithPrice>();
 
-  // Iterate over the data array and add centroid values to the Set
-  clusters.forEach((obj) => {
-    distinctCentroids.add(obj.centroid);
-  });
+  // // Iterate over the data array and add centroid values to the Set
+  // clusters.forEach((obj) => {
+  //   distinctCentroids.add(obj.centroid);
+  // });
 
-  let closestCentroid: RowWithPrice | null =
-    clusters && clusters.length > 0 ? clusters[0].centroid : null;
-  let minDistance = Infinity;
+  // let closestCentroid: RowWithPrice | null =
+  //   clusters && clusters.length > 0 ? clusters[0].centroid : null;
+  // let minDistance = Infinity;
 
-  distinctCentroids.forEach((centroid) => {
-    // console.log(centroid);
-    const distance = euclideanDistance(centroid, tmpData);
-    if (distance < minDistance) {
-      minDistance = distance;
-      closestCentroid = centroid;
-    }
-  });
+  // distinctCentroids.forEach((centroid) => {
+  //   // console.log(centroid);
+  //   const distance = euclideanDistance(centroid, tmpData);
+  //   if (distance < minDistance) {
+  //     minDistance = distance;
+  //     closestCentroid = centroid;
+  //   }
+  // });
 
-  const prediction = closestCentroid?.price ?? 0;
-  const denromalizedPrd = deNormalize(
-    prediction,
-    +avgg[0].minPrice,
-    +avgg[0].maxPrice
-  );
+  // const prediction = closestCentroid?.price ?? 0;
+  // const denromalizedPrd = deNormalize(
+  //   prediction,
+  //   +avgg[0].minPrice,
+  //   +avgg[0].maxPrice
+  // );
   ///
   // return clusters;
-  return denromalizedPrd;
+  console.log(clusters.map((cluster) => cluster.points.length));
+  clusters.forEach((cluster, i) => {
+    // console.log("cluster", i, cluster.centroid, cluster.points.length);
+  });
+  return clusters;
 };
 
 type Repo = {
@@ -324,8 +390,11 @@ const Task6 = ({
   const [isEuklidianValue, setIsEuklidianValue] = useState<boolean>(true);
 
   const k = () => {
-    kMeans(allData, props, avg, kValue, isEuklidianValue).then((res) =>
-      setPrediction(res)
+    kMeans(allData, props, avg, kValue, isEuklidianValue).then(
+      (res) => {
+        return;
+      }
+      // setPrediction(res)
     );
   };
   return (
