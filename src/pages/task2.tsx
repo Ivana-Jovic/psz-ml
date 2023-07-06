@@ -157,24 +157,40 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
     db
       .select({ count: sql<number>`count(*)` })
       .from(housesForRent)
-      .where(eq(housesForRent.registered, true))
-      .where(eq(housesForRent.validOffer, true)),
+      .where(
+        and(
+          eq(housesForRent.registered, true),
+          eq(housesForRent.validOffer, true)
+        )
+      ),
     db
       .select({ count: sql<number>`count(*)` })
       .from(housesForSale)
-      .where(eq(housesForSale.registered, true))
-      .where(eq(housesForSale.validOffer, true)),
+      .where(
+        and(
+          eq(housesForSale.registered, true),
+          eq(housesForSale.validOffer, true)
+        )
+      ),
     //apartments
     db
       .select({ count: sql<number>`count(*)` })
       .from(apartmentsForRent)
-      .where(eq(apartmentsForRent.registered, true))
-      .where(eq(apartmentsForRent.validOffer, true)),
+      .where(
+        and(
+          eq(apartmentsForRent.registered, true),
+          eq(apartmentsForRent.validOffer, true)
+        )
+      ),
     db
       .select({ count: sql<number>`count(*)` })
       .from(apartmentsForSale)
-      .where(eq(apartmentsForSale.registered, true))
-      .where(eq(apartmentsForSale.validOffer, true)),
+      .where(
+        and(
+          eq(apartmentsForSale.registered, true),
+          eq(apartmentsForSale.validOffer, true)
+        )
+      ),
 
     // -------------------------- 2.d) --------------------------
     //2.d) prikazati rang listu prvih 30 najskupljih kuća koje se prodaju, i 30 najskupljih stanova koji se prodaju u Srbiji;
@@ -218,46 +234,54 @@ export const getServerSideProps: GetServerSideProps<Repo> = async () => {
       .select()
       .from(housesForRent)
       .where(
-        or(
-          eq(housesForRent.yearOfConstruction, 2022),
-          eq(housesForRent.yearOfConstruction, 2023)
+        and(
+          or(
+            eq(housesForRent.yearOfConstruction, 2022),
+            eq(housesForRent.yearOfConstruction, 2023)
+          ),
+          eq(housesForRent.validOffer, true)
         )
       )
-      .where(eq(housesForRent.validOffer, true))
       .orderBy(desc(housesForRent.price)),
     db
       .select()
       .from(housesForSale)
       .where(
-        or(
-          eq(housesForSale.yearOfConstruction, 2022),
-          eq(housesForSale.yearOfConstruction, 2023)
+        and(
+          or(
+            eq(housesForSale.yearOfConstruction, 2022),
+            eq(housesForSale.yearOfConstruction, 2023)
+          ),
+          eq(housesForSale.validOffer, true)
         )
       )
-      .where(eq(housesForSale.validOffer, true))
       .orderBy(desc(housesForSale.price)),
     //apartments
     db
       .select()
       .from(apartmentsForRent)
       .where(
-        or(
-          eq(apartmentsForRent.yearOfConstruction, 2022),
-          eq(apartmentsForRent.yearOfConstruction, 2023)
+        and(
+          or(
+            eq(apartmentsForRent.yearOfConstruction, 2022),
+            eq(apartmentsForRent.yearOfConstruction, 2023)
+          ),
+          eq(apartmentsForRent.validOffer, true)
         )
       )
-      .where(eq(apartmentsForRent.validOffer, true))
       .orderBy(desc(apartmentsForRent.price)),
     db
       .select()
       .from(apartmentsForSale)
       .where(
-        or(
-          eq(apartmentsForSale.yearOfConstruction, 2022),
-          eq(apartmentsForSale.yearOfConstruction, 2023)
+        and(
+          or(
+            eq(apartmentsForSale.yearOfConstruction, 2022),
+            eq(apartmentsForSale.yearOfConstruction, 2023)
+          ),
+          eq(apartmentsForSale.validOffer, true)
         )
       )
-      .where(eq(apartmentsForSale.validOffer, true))
       .orderBy(desc(apartmentsForSale.price)),
 
     // -------------------------- 2.g) --------------------------
